@@ -1,0 +1,68 @@
+/* layout */
+
+
+
+// <div class="content_box">
+// 	<ol class="post_list">{% for post in site.posts %}
+// 		<li>
+// 			<a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+// 			<date class="date">{{ post.date | date: "%b %-d, %Y" }}</date>
+// 		</li>
+// 	{% endfor %}</ol>
+// </div>
+
+
+article.post {
+	@media (orientation: portrait), (max-width: $por_in_landscape) and (orientation: landscape) {
+		$menu-height: 220px;
+		.menu {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: $menu-height;
+			// background-color: yellow;
+		}
+		.canvas_box {
+			position: absolute;
+			top: $menu-height;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			// background-color: green;
+		}
+	}
+	@media (min-width: $por_in_landscape + 1px) and (orientation: landscape) {
+		$menu-width: 300px;
+		.menu {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			width: $menu-width;
+			// background-color: yellow;
+		}
+		.canvas_box {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: $menu-width;
+			right: 0;
+		}
+	}
+}
+// <header>
+// 	<h1>{{ site.title }}</h1>
+// 	<nav>abc def</nav>
+// </header>
+
+header {
+	background-color: yellow;
+	h1 {
+		margin: 0;
+	}
+}
+
+footer {
+	text-align: center;
+}

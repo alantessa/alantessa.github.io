@@ -1,0 +1,20 @@
+---
+layout: default
+---
+<header>
+	<h1>{{ site.title }}</h1>
+	<nav>abc def</nav>
+</header>
+
+<div class="content_box">
+	<ol class="post_list">{% for post in site.posts %}
+		<li>
+			<a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+			<date class="date">{{ post.date | date: "%b %-d, %Y" }}</date>
+		</li>
+	{% endfor %}</ol>
+</div>
+
+<footer>
+	<span class="copyright">copyright lalalalala</span>
+</footer>

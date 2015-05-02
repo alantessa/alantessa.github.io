@@ -1,0 +1,57 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+@charset "utf-8";
+
+$por_in_landscape: 700px;
+$text-color: #666;
+$link-color: #20AFBB;
+
+@import "_layout";
+
+body, table, a {
+	color: $text-color;
+	font-family: "Titillium Web", "Verdana", sans-serif;
+	font-size: 14px;
+}
+
+a {
+	text-decoration: none;
+	padding-bottom: 1px;
+	border-bottom: 1px solid $link-color;
+	color: $link-color;
+}
+
+article.post {
+	.menu {
+		box-sizing: border-box;
+		nav {
+			.link_icon {margin-right: 0.2rem;}
+			a {font-size: 1rem;}
+		}
+		h1 {
+			font-weight: normal;
+			font-size: 1.2rem;
+		}
+		p {
+			font-size: 1rem;
+			line-height: 1.5em;
+			color: lighten($text-color, 15%);
+		}
+		.copyright {display: block; margin: 0.2rem 0;}
+
+		@media (orientation: portrait), (max-width: $por_in_landscape) and (orientation: landscape) {
+			padding: 10px 20px;
+			border-bottom: 1px solid #CCC;
+			h1 {margin: 1rem 0;}
+			p {display: inline; margin-left: 0.5em;}
+		}
+		@media (min-width: $por_in_landscape + 1px) and (orientation: landscape) {
+			padding: 20px;
+			border-right: 1px solid #CCC;
+			h1 {margin: 1.5rem 0;}
+			.date {display: block; margin: 1.5rem 0;}
+			.copyright {position: absolute; bottom: 1.5em;}
+		}
+	}
+}
