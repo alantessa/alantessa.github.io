@@ -50,6 +50,10 @@ article.post {
 			right: 0;
 		}
 	}
+
+    canvas {
+        display: block;
+    }
 }
 // <header>
 // 	<h1>{{ site.title }}</h1>

@@ -5,7 +5,133 @@ date:   2015-05-02 17:00:30
 thumbnail: ""
 description: "lalala sdlkfjslkfjlska sdfjslakfj sdflkjdsklfjdslkj sdfkldsfjlksdj sdflkjsdlkajfklsa dsfsklafjl"
 ---
-<canvas></canvas>
-<script type="text/javascript">
-	
+<canvas class="draw-target"></canvas>
+<script>
+var emitter1;
+var emitter2;
+var paused;
+
+function init(ctx, w, h) {
+    Math.seedrandom('alantessa');
+
+    emitter1 = new Emitter(Math.random(), 1.4, 0.02);
+    emitter2 = new Emitter(Math.random(), 1.2, 0.02);
+    paused = false;
+
+    ctx.canvas.addEventListener('click', function() {
+        paused = !paused;
+    });
+}
+
+function update(ctx, w, h, tick) {
+    if(!paused) {
+        // emit particles
+        if (Math.random() > 0.7) {
+            emitter1.emit(Math.floor(Math.random() * 5) + 5);
+            emitter2.emit(Math.floor(Math.random() * 5) + 5);
+        }
+
+        // update and render
+        emitter1.update();
+        emitter2.update();
+    }
+
+    // background gradient
+    var grd = ctx.createLinearGradient(0, 0, 0, h);
+    grd.addColorStop(0, '#FFF8F8');
+    grd.addColorStop(1, '#FFEAEA');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, w, h);
+
+    emitter1.render(ctx, w, h);
+    emitter2.render(ctx, w, h);
+}
+
+
+function Emitter(x, y, size) {
+    this.particles = [];
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.speed = 0;
+}
+Emitter.prototype.emit = function(n) {
+    for (var i = 0; i < n; i++) {
+        var x = this.x;
+        var y = this.y;
+
+        var white = Math.random() > 0.5;
+        if(white) {
+            var size = Math.random() * this.size * 0.8 + this.size;
+            var color = this._whiteColor();
+        } else {
+            var size = Math.random() * this.size * 1.0 + this.size;
+            var color = this._pinkColor();
+        }
+
+        this.particles.push(new Particle(x, y, size, color));
+    }
+};
+Emitter.prototype.update = function() {
+    // randomly move position
+    this.speed += (Math.random() - 0.5) * 0.001;
+    this.speed = Math.max(-0.01, Math.min(this.speed, 0.01));
+    this.x += this.speed;
+    if(this.x > 1.0) {
+        this.x = 0.0;
+    } else if(this.x < 0.0) {
+        this.x = 1.0;
+    }
+
+    // update particles and remove old particles
+    for (var i = 0; i < this.particles.length; i++) {
+        var p = this.particles[i];
+        p.update();
+        if (p.y < 0 || p.x < 0 || p.x > 1.0) {
+            this.particles.splice(i--, 1);
+        }
+    }
+};
+Emitter.prototype.render = function(ctx, w, h) {
+    for (var i = 0; i < this.particles.length; i++) {
+        var p = this.particles[i];
+        p.render(ctx, w, h);
+    }
+};
+Emitter.prototype._whiteColor = function() {
+    return 'rgba(255, 255, 255, 0.3)';
+};
+Emitter.prototype._pinkColor = function() {
+    var gb = Math.floor(Math.random() * 20) + 210;
+    return 'rgba(255, ' + gb + ', ' + gb + ', 0.4)';
+};
+
+
+function Particle(x, y, size, color) {
+    // location and size
+    this.x = x;
+    this.y = y;
+    this.size = size;
+
+    // angle and speed
+    var angle = Math.random() * 2 * Math.PI;
+    var speed = Math.random() * 0.002;
+    this.speedx = Math.cos(angle) * speed * 0.8;
+    this.speedy = Math.sin(angle) * speed;
+
+    // color
+    this.color = color;
+}
+Particle.prototype.update = function() {
+    this.x += this.speedx;
+    this.y += this.speedy;
+    this.size *= 0.99;
+    this.speedy -= 0.0001;
+};
+Particle.prototype.render = function(ctx, w, h) {
+    ctx.beginPath();
+    ctx.fillStyle = this.color;
+    ctx.arc(Math.floor(this.x * w), Math.floor(this.y * h), Math.floor(this.size * w), 0, 2 * Math.PI, false);
+    ctx.fill();
+};
 </script>
