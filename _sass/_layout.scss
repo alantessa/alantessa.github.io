@@ -1,17 +1,5 @@
 /* layout */
 
-
-
-// <div class="content_box">
-// 	<ol class="post_list">{% for post in site.posts %}
-// 		<li>
-// 			<a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-// 			<date class="date">{{ post.date | date: "%b %-d, %Y" }}</date>
-// 		</li>
-// 	{% endfor %}</ol>
-// </div>
-
-
 article.post {
 	@media (orientation: portrait), (max-width: $por_in_landscape) and (orientation: landscape) {
 		$menu-height: 220px;
@@ -55,15 +43,13 @@ article.post {
         display: block;
     }
 }
-// <header>
-// 	<h1>{{ site.title }}</h1>
-// 	<nav>abc def</nav>
-// </header>
 
 header {
-	background-color: yellow;
+	// background-color: yellow;
+	padding: 0 2rem;
 	h1 {
-		margin: 0;
+		margin: 1rem 0;
+		font-weight: normal;
 	}
 }
 
