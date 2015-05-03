@@ -129,9 +129,10 @@ Particle.prototype.update = function() {
     this.speedy -= 0.0001;
 };
 Particle.prototype.render = function(ctx, w, h) {
+    var size = Math.max(w, h);
     ctx.beginPath();
     ctx.fillStyle = this.color;
-    ctx.arc(Math.floor(this.x * w), Math.floor(this.y * h), Math.floor(this.size * w), 0, 2 * Math.PI, false);
+    ctx.arc(Math.floor(this.x * w), Math.floor(this.y * h), Math.floor(this.size * size), 0, 2 * Math.PI, false);
     ctx.fill();
 };
 </script>
