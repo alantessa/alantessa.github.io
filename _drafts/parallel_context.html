@@ -1,0 +1,63 @@
+---
+layout: post
+title:  "parallel context"
+thumbnail: ""
+description: ""
+---
+<canvas class="draw-target"></canvas>
+<script>
+var pctx;
+var x = 0.5, y = 0.5;
+
+function init(ctx, w, h) {
+    Math.seedrandom('alantessa');
+    pctx = new ParallelContext(ctx, w, h);
+    
+    ctx.canvas.addEventListener('mousemove', function(e) {
+        console.log(e);
+        pctx.fillRect(e.offsetX, e.offsetY, 2, 2);
+    });
+}
+
+function update(ctx, w, h, tick) {
+    x += (Math.random() - 0.5) * 0.01;
+    y += (Math.random() - 0.5) * 0.01;
+    var c = Math.random();
+    
+    pctx.fillStyle = 'rgba(61,185,196,' + c + ')';
+    pctx.fillRect(x * w, y * h, 1, 1);
+}
+
+function ParallelContext(ctx, w, h) {
+    this.ctx = ctx;
+    this.w = w;
+    this.h = h;
+
+    Object.defineProperty(this, 'fillStyle', {
+        get: function() {
+            return ctx.fillStyle;
+        },
+        set: function(v) {
+            ctx.fillStyle = v;
+        }
+    });
+}
+ParallelContext.prototype.fillRect = function(x, y, w, h) {
+    this._call_xywh('fillRect', x, y, w, h);
+};
+ParallelContext.prototype.strokeRect = function(x, y, w, h) {
+    this._call_xywh('strokeRect', x, y, w, h);
+};
+    
+ParallelContext.prototype._call_xywh = function(method, x, y, w, h) {
+    var cx = this.w * 0.5;
+    var cy = this.h * 0.5;
+    var r = Math.min(cx, cy);
+    
+    var angle = Math.atan2(cy - y, cx - x);
+    var d = Math.sqrt(Math.pow(cy - y, 2) + Math.pow(cx - x, 2));
+    for(var i = 0; i < Math.PI * 2; i += Math.PI * 0.05) {
+        this.ctx[method](Math.cos(angle - i) * d + cx, Math.sin(angle - i) * d + cy, w, h);
+    }
+};
+</script>

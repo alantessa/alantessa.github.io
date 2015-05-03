@@ -4,7 +4,7 @@ title:  "hexagon watercolor"
 thumbnail: "hexagon-watercolor.png"
 pointcolor: "255, 68, 35"
 ---
-<canvas class="draw-target"></canvas>
+<canvas class="draw-target" data-fps="100"></canvas>
 <script>
 var paused;
 
@@ -23,8 +23,13 @@ function update(ctx, w, h, tick) {
 
     var x = Math.random();
     var y = Math.random();
-    var color = 'rgba(255,' + Math.floor(x * 200) + ',' + Math.floor(y * 200) + ', 0.2)';
-    var r = Math.floor(Math.random() * 50) + 50;
+    var color = (
+        Math.random() > 0.1 ?
+        'rgba(255,' + Math.floor(x * 200) + ',' + Math.floor(y * 200) + ', 0.2)' :
+        'rgba(255,255,255,0.2)'
+    );
+    var size = Math.max(30, w * 0.03);
+    var r = Math.floor(Math.random() * size) + size;
     var sides = 6;
     polygon(ctx, x * w, y * h, r, sides, color);
 }
@@ -44,6 +49,8 @@ function polygon(ctx, x, y, r, sides, color) {
         ctx.lineTo(x + r * ox, y - r * oy);
     }
     ctx.fillStyle = color;
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
     ctx.fill();
+    ctx.stroke();
 }
 </script>
