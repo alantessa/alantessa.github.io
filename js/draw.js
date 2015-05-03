@@ -1,8 +1,9 @@
 (function () {
     'use strict';
     var DEFAULT_FPS = 50;
-    var DEFAULT_INITIALIZER = 'init';
-    var DEFAULT_UPDATER = 'update';
+    var DEFAULT_ON_INIT = 'init';
+    var DEFAULT_ON_UPDATE = 'update';
+    var DEFAULT_ON_RESIZE = 'resize';
 
     var canvas;
     var ctx;
@@ -10,8 +11,9 @@
     var fps;
     var tick;
     
-    var initializer;
-    var updater;
+    var onInit;
+    var onUpdate;
+    var onResize;
 
 
     function main() {
@@ -19,16 +21,16 @@
         ctx = canvas.getContext('2d');
         fps = +canvas.dataset.fps || DEFAULT_FPS;
         tick = 0;
-        initializer = window[canvas.dataset.initializer || DEFAULT_INITIALIZER] || function () {};
-        updater = window[canvas.dataset.updater || DEFAULT_UPDATER] || function () {};
+        onInit = window[canvas.dataset.onInit || DEFAULT_ON_INIT] || function () {};
+        onUpdate = window[canvas.dataset.onUpdate || DEFAULT_ON_UPDATE] || function () {};
+        onResize = window[canvas.dataset.onResize || DEFAULT_ON_RESIZE] || function () {};
 
         resize();
 
-        initializer(ctx, w, h);
+        onInit(ctx, w, h);
         checkForUpdate();
     }
 
-    
     function resize() {
         if (canvas.dataset.autofit === 'false') {
             return;
@@ -38,6 +40,8 @@
         h = canvas.parentNode.offsetHeight;
         canvas.width = w;
         canvas.height = h;
+
+        onResize(ctx, w, h);
     }
 
     
@@ -49,7 +53,7 @@
             return;
         }
         checkForUpdate.updatedAt = now;
-        updater(ctx, w, h, tick++);
+        onUpdate(ctx, w, h, tick++);
     }
     checkForUpdate.updatedAt = null;
 
