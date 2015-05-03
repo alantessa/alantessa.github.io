@@ -1,58 +1,28 @@
 /* layout */
 
 article.post {
-	@media (orientation: portrait), (max-width: $por_in_landscape) and (orientation: landscape) {
-		$menu-height: 220px;
-		.menu {
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			height: $menu-height;
-			// background-color: yellow;
-		}
-		.canvas_box {
-			position: absolute;
-			top: $menu-height;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			// background-color: green;
-		}
+	canvas {display: block;}
+	.canvas_box {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
 	}
-	@media (min-width: $por_in_landscape + 1px) and (orientation: landscape) {
-		$menu-width: 300px;
-		.menu {
-			position: absolute;
-			top: 0;
-			bottom: 0;
-			left: 0;
-			width: $menu-width;
-			// background-color: yellow;
-		}
-		.canvas_box {
-			position: absolute;
-			top: 0;
-			bottom: 0;
-			left: $menu-width;
-			right: 0;
-		}
-	}
-
-    canvas {
-        display: block;
-    }
-}
-
-header {
-	// background-color: yellow;
-	padding: 0 2rem;
-	h1 {
-		margin: 1rem 0;
-		font-weight: normal;
+	.menu {
+		box-sizing: border-box;
+		width: 100%;
+		
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 1;
 	}
 }
 
-footer {
-	text-align: center;
+body {
+	margin: 0 auto;
+	max-width: 75rem;
+	padding: 0 4rem;
+	box-sizing: border-box;
 }

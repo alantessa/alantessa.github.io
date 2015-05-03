@@ -3,11 +3,18 @@ layout: default
 ---
 <article class="post">
 	<div class="menu">
-		<nav><span class="link_icon">&lt;</span><a href="/">back to HOME</a></nav>
-		<h1>{{ page.title }}</h1>
-		<date class="date">{{ page.date | date: "%b %-d, %Y" }}</date>
-		<p>{{ page.description }}</p>
-		<span class="copyright">Copyright 2015 Alan+Tessa. All rights reserved.</span>
+		<h1 class="title" style="color: rgba({{ page.pointcolor }}, 0.7);">{% if page.title %}{{ page.title }}{% else %}Untitled Alan + Tessa Project{% endif %}</h1>
+		<ul class="nav">
+			<li class="home"><a href="/" style="color: rgba({{ page.pointcolor }}, 0.5);">home</a></li>
+			<li class="newer">
+				{% if page.next.url %}<a href="{{ page.next.url }}" style="color: rgba({{ page.pointcolor }}, 0.5);">newer</a>
+				{% else %}<span style="color: rgba({{ page.pointcolor }}, 0.3);">newer</span>{% endif %}
+			</li>
+			<li class="older">
+				{% if page.previous.url %}<a href="{{ page.previous.url }}" style="color: rgba({{ page.pointcolor }}, 0.5);">older</a>
+				{% else %}<span style="color: rgba({{ page.pointcolor }}, 0.3);">older</span>{% endif %}
+			</li>
+		</ul>
 	</div>
 	<div class="canvas_box">
 		{{ content }}
