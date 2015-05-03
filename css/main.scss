@@ -77,7 +77,10 @@ footer {
 			top: 0.7rem;
 			right: 2rem;
 			text-align: right;
-			.title {display: block;}
+			.title {
+                display: block;
+                text-transform: uppercase;
+            }
 		}
 	}
 }
