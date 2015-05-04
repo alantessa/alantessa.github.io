@@ -14,9 +14,13 @@ html {
 a { text-decoration: none; }
 
 article.post .menu {
-	padding-right: 0.8rem;
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 0.5rem 1rem;
+	
 	.title {
-		margin: 0.6rem 0 0;
+		margin: 0;
 		font-weight: normal;
 		font-size: 1.1rem;
 		text-align: right;
