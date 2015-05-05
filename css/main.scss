@@ -38,11 +38,27 @@ body {
 }
 
 /* page */
-$mar-outmost: 5rem;
-$mar-between: 2rem;
-header {margin: $mar-outmost 0 $mar-between;}
-.content {margin: $mar-between 0 $mar-between;}
-footer {margin: $mar-between 0 $mar-outmost;}
+@media (max-width: $g-breakp-1) {
+	$mar-outmost: 2.2rem;
+	$mar-between: 1.2rem;
+	header {margin: $mar-outmost 0 $mar-between;}
+	.content {margin: $mar-between 0 $mar-between;}
+	footer {margin: $mar-between 0 $mar-outmost;}
+}
+@media (min-width: $g-breakp-1 + 1px) and (max-width: $g-breakp-2) {
+	$mar-outmost: 3.5rem;
+	$mar-between: 1.8rem;
+	header {margin: $mar-outmost 0 $mar-between;}
+	.content {margin: $mar-between 0 $mar-between;}
+	footer {margin: $mar-between 0 $mar-outmost;}
+}
+@media (min-width: $g-breakp-2 + 1px) {
+	$mar-outmost: 5rem;
+	$mar-between: 2rem;
+	header {margin: $mar-outmost 0 $mar-between;}
+	.content {margin: $mar-between 0 $mar-between;}
+	footer {margin: $mar-between 0 $mar-outmost;}
+}
 
 header .site-title {
 	box-sizing: border-box;
