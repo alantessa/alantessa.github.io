@@ -3,11 +3,11 @@ layout: default
 ---
 
 <header>
-	<h1>{{ site.title }}</h1>
+	<h1 class="site-title {% if page.class %}{{ page.class }}{% endif %}">{{ site.title }}</h1>
 </header>
-<div class="content">
+<div class="content {% if page.class %}{{ page.class }}{% endif %}">
 {{ content }}
 </div>
 <footer>
-	<span class="copyright">Copyright 2015 Alan+Tessa. All rights reserved.</span>
+	<span class="copyright {% if page.class %}{{ page.class }}{% endif %}">Copyright 2015 Alan &amp; Tessa. All rights reserved.</span>
 </footer>

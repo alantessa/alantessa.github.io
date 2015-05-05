@@ -1,13 +1,14 @@
 ---
 layout: page
+class: index
 ---
 
 <ol class="post_list">{% for post in site.posts %}
-	<li><a href="{{ post.url | prepend: site.baseurl }}">
+	<li><a href="{{ post.url | prepend: site.baseurl }}" class="card">
 		<img src="/image/thumbnail/{{ post.thumbnail }}" alt="{{ post.title }}">
 		<span class="info">
-			<span class="title" style="color: rgba({{ post.pointcolor }}, 0.7);">{{ post.title }}</span>
-			<date class="date" style="color: rgba({{ post.pointcolor }}, 0.5);">{{ post.date | date: "%b %-d, %Y" }}</date>
+			<span class="title">{{ post.title }}</span>
+			<date class="date">{{ post.date | date: "%b %-d, %Y" }}</date>
 		</span>
 	</a></li>
 {% endfor %}</ol>
