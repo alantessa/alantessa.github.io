@@ -1,25 +1,23 @@
 ---
 layout: default
 ---
-<article class="post">
-	<div class="menu" {% if page.bgcolor %}style="background-color: rgba({{ page.bgcolor }}, 0.5);"{% endif %}>
-		<h1 class="title" style="color: rgba({{ page.pointcolor }}, 0.8); {% if page.bgcolor %}text-shadow: 1px 1px 1px rgb({{ page.bgcolor }});{% endif %}">{% if page.title %}{{ page.title }}{% else %}Untitled Alan + Tessa Project{% endif %}</h1>
-		<ul class="nav">
-			<li class="home"><a href="/" style="color: rgba({{ page.pointcolor }}, 0.5);">home</a></li>
-			<li class="newer">
-				{% if page.next.url %}<a href="{{ page.next.url }}" style="color: rgba({{ page.pointcolor }}, 0.5);">newer</a>
-				{% else %}<span style="color: rgba({{ page.pointcolor }}, 0.3);">newer</span>{% endif %}
-			</li>
-			<li class="older">
-				{% if page.previous.url %}<a href="{{ page.previous.url }}" style="color: rgba({{ page.pointcolor }}, 0.5);">older</a>
-				{% else %}<span style="color: rgba({{ page.pointcolor }}, 0.3);">older</span>{% endif %}
-			</li>
-		</ul>
-	</div>
-	<div class="canvas_box">
-		{{ content }}
-	</div>
-</article>
+<div class="post-wrap">
+	<article class="post">
+		<h1 class="title">{% if page.title %}{{ page.title }}{% else %}Untitled Alan + Tessa Project{% endif %}</h1>
+		<div class="frame">{{ content }}</div>
+	</article>
+	<ul class="post-nav">
+		<li class="home"><a href="/">home</a></li>
+		<li class="newer">
+			{% if page.next.url %}<a href="{{ page.next.url }}">newer</a>
+			{% else %}<span class="disabled">newer</span>{% endif %}
+		</li>
+		<li class="older">
+			{% if page.previous.url %}<a href="{{ page.previous.url }}">older</a>
+			{% else %}<span class="disabled">older</span>{% endif %}
+		</li>
+	</ul>
+</div>
 
 <script type="text/javascript" src="/js/seedrandom.min.js"></script>
 <script type="text/javascript" src="/js/draw.js"></script>

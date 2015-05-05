@@ -23,6 +23,7 @@ $g-breakp-2: 1000px;
 body {
 	margin: 0 auto;
 	max-width: 75rem;
+	height: 100%;
 	box-sizing: border-box;
 
 	@media (max-width: $g-breakp-1) {
@@ -67,102 +68,5 @@ footer .copyright {
 
 }
 
-/* page > index */
-
-.post_list {
-	margin: 0;
-	padding: 0;
-	list-style-type: none;
-	overflow: hidden;
-	li {
-		box-sizing: border-box;
-		border: 1rem solid #FFF;
-	}
-
-	$breakp-1: 600px;
-	$breakp-2: 900px;
-	@media (max-width: $breakp-1) {
-		$n-col: 2;
-		& li { width: 100% / $n-col; float: left; }
-	}
-	@media (min-width: $breakp-1 + 1px) and (max-width: $breakp-2) {
-		$n-col: 4;
-		& li { width: 100% / $n-col; float: left; }
-	}
-	@media (min-width: $breakp-2 + 1px) {
-		$n-col: 6;
-		& li { width: 100% / $n-col; float: left; }
-	}
-
-	.card {
-		display: block;
-		border-radius: 50%;
-		position: relative;
-		$deg: -2deg;
-		img {
-			display: block;
-			width: 100%;
-			border-radius: 0.5rem;
-			transform: rotate($deg);
-			-webkit-transform: rotate($deg);
-			-ms-transform: rotate($deg);
-		}
-		.info {
-			display: block;
-			transform: rotate($deg);
-			-webkit-transform: rotate($deg);
-			-ms-transform: rotate($deg);
-			padding-left: 0.3rem;
-			margin-top: 0.2rem;
-		}
-		.date {
-			display: block;
-			font-size: 0.9rem;
-		}
-	}
-}
-
-/* post */
-article.post {
-	canvas {display: block;}
-	.canvas_box {
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		right: 0;
-	}
-	.menu {
-		box-sizing: border-box;
-		z-index: 1;
-	}
-}
-
-article.post .menu {
-	position: absolute;
-	top: 0;
-	right: 0;
-	padding: 0.5rem 1rem;
-	
-	.title {
-		margin: 0;
-		font-weight: normal;
-		font-size: 1.1rem;
-		text-align: right;
-		text-transform: uppercase;
-	}
-	.nav {
-		margin: 0;
-		padding: 0;
-		list-style-type: none;
-		float: right;
-
-		li {
-			display: inline-block;
-			margin-right: 0.5rem;
-		}
-		li:last-child {
-			margin-right: 0;
-		}
-	}
-}
+@import "_post-list";
+@import "_post";

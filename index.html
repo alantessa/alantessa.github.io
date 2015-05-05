@@ -3,7 +3,7 @@ layout: page
 class: index
 ---
 
-<ol class="post_list">{% for post in site.posts %}
+<ol class="post-list">{% for post in site.posts %}
 	<li><a href="{{ post.url | prepend: site.baseurl }}" class="card">
 		<img src="/image/thumbnail/{{ post.thumbnail }}" alt="{{ post.title }}">
 		<span class="info">
