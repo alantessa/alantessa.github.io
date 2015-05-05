@@ -104,10 +104,14 @@ footer .copyright {
 			width: 100%;
 			border-radius: 0.5rem;
 			transform: rotate($deg);
+			-webkit-transform: rotate($deg);
+			-ms-transform: rotate($deg);
 		}
 		.info {
 			display: block;
 			transform: rotate($deg);
+			-webkit-transform: rotate($deg);
+			-ms-transform: rotate($deg);
 			padding-left: 0.3rem;
 			margin-top: 0.2rem;
 		}
