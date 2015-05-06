@@ -1,0 +1,44 @@
+.post-list {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	overflow: hidden;
+	li {
+		box-sizing: border-box;
+		border: 1rem solid #FFF;
+	}
+
+	$breakp-1: 600px;
+	$breakp-2: 900px;
+	@media (max-width: $breakp-1) {
+		$n-col: 2;
+		& li { width: 100% / $n-col; float: left; }
+	}
+	@media (min-width: $breakp-1 + 1px) and (max-width: $breakp-2) {
+		$n-col: 4;
+		& li { width: 100% / $n-col; float: left; }
+	}
+	@media (min-width: $breakp-2 + 1px) {
+		$n-col: 6;
+		& li { width: 100% / $n-col; float: left; }
+	}
+
+	.card {
+		display: block;
+		border-radius: 50%;
+		position: relative;
+		img {
+			display: block;
+			width: 100%;
+			border-radius: 0.5rem;
+		}
+		.info {
+			display: block;
+			margin-top: 0.3rem;
+		}
+		.date {
+			display: block;
+			font-size: 0.9rem;
+		}
+	}
+}

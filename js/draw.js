@@ -36,8 +36,8 @@
             return;
         }
 
-        w = canvas.parentNode.offsetWidth;
-        h = canvas.parentNode.offsetHeight;
+        w = canvas.parentNode.clientWidth;
+        h = canvas.parentNode.clientHeight;
         canvas.width = w;
         canvas.height = h;
 
