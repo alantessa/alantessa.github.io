@@ -1,4 +1,4 @@
-(function () {
+var draw = (function () {
     'use strict';
     var DEFAULT_FPS = 50;
     var DEFAULT_ON_INIT = 'init';
@@ -60,4 +60,13 @@
     
     window.addEventListener('load', main);
     window.addEventListener('resize', resize);
+
+    
+    function showControlPanel(ctx) {
+        console.log(ctx);
+    }
+
+    return {
+        showControlPanel: showControlPanel
+    };
 })();

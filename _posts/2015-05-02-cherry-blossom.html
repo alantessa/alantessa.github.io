@@ -10,6 +10,12 @@ thumbnail: "cherry-blossom.png"
 var emitter1;
 var emitter2;
 var paused;
+var cfg = {
+    emitRatio: 0.3,
+    particlesPerEmitMin: 5,
+    particlesPerEmitMax: 10,
+    whiteParticleRatio: 0.5,
+};
 
 function init(ctx, w, h) {
     Math.seedrandom('alantessa');
@@ -21,14 +27,16 @@ function init(ctx, w, h) {
     ctx.canvas.addEventListener('click', function() {
         paused = !paused;
     });
+    
+    draw.showControlPanel(cfg);
 }
 
 function update(ctx, w, h, tick) {
     if(!paused) {
         // emit particles
-        if (Math.random() > 0.7) {
-            emitter1.emit(Math.floor(Math.random() * 5) + 5);
-            emitter2.emit(Math.floor(Math.random() * 5) + 5);
+        if (Math.random() < cfg.emitRatio) {
+            emitter1.emit(Math.floor(randomRange(5, 10)));
+            emitter2.emit(Math.floor(randomRange(5, 10)));
         }
 
         // update and render
@@ -60,7 +68,7 @@ Emitter.prototype.emit = function(n) {
         var x = this.x;
         var y = this.y;
 
-        var white = Math.random() > 0.5;
+        var white = Math.random() < cfg.whiteParticleRatio;
         if(white) {
             var size = Math.random() * this.size * 0.8 + this.size;
             var color = this._whiteColor();
@@ -135,4 +143,9 @@ Particle.prototype.render = function(ctx, w, h) {
     ctx.arc(Math.floor(this.x * w), Math.floor(this.y * h), Math.floor(this.size * size), 0, 2 * Math.PI, false);
     ctx.fill();
 };
+
+
+function randomRange(low, high) {
+    return Math.random() * (high - low) + low;
+}
 </script>

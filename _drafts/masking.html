@@ -1,0 +1,41 @@
+---
+layout: post
+title:  "masking"
+thumbnail: "template.png"
+pointcolor: "51, 51, 51"
+---
+<canvas class="draw-target"></canvas>
+<script>
+
+function init(ctx, w, h) {
+    Math.seedrandom('alantessa');
+}
+
+function resize(ctx, w, h) {
+    // Draw pattern on off-line canvas
+    var offcanvas = document.createElement('canvas');
+    offcanvas.width = w;
+    offcanvas.height = h;
+    offctx = offcanvas.getContext('2d');
+    for(var i = 0; i < 100; i++) {
+        offctx.fillRect(Math.random() * w, Math.random() * h, 0.05 * w, 0.05 * w);
+    }
+    
+    // Composite pattern with a gradient
+    var grd = ctx.createLinearGradient(0, 0, w, 0);
+    grd.addColorStop(0, '#FFE8E8');
+    grd.addColorStop(1, '#FFCACA');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, w, h);
+    ctx.globalCompositeOperation = 'destination-in';
+    ctx.drawImage(offcanvas, 0, 0, w, h);
+
+    // Composite background
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = 'red';
+    ctx.fillRect(0, 0, w, h);
+}
+
+function update(ctx, w, h, tick) {
+}
+</script>

@@ -7,7 +7,8 @@ pointcolor: "51, 51, 51"
 <canvas class="draw-target"></canvas>
 <script>
 var pctx;
-var x = 0.5, y = 0.5;
+var x1 = 0.6, y1 = 0.6;
+var x2 = 0.75, y2 = 0.75;
 
 function init(ctx, w, h) {
     Math.seedrandom('alantessa');
@@ -20,12 +21,15 @@ function init(ctx, w, h) {
 }
 
 function update(ctx, w, h, tick) {
-    x += (Math.random() - 0.5) * 0.01;
-    y += (Math.random() - 0.5) * 0.01;
+    x1 += (Math.random() - 0.5) * 0.01;
+    y1 += (Math.random() - 0.5) * 0.01;
+    x2 += (Math.random() - 0.5) * 0.01;
+    y2 += (Math.random() - 0.5) * 0.01;
     var c = Math.random();
     
     pctx.fillStyle = 'rgba(61,185,196,' + c + ')';
-    pctx.fillRect(x * w, y * h, 1, 1);
+    pctx.fillRect(x1 * w, y1 * h, 1, 1);
+    pctx.fillRect(x2 * w, y2 * h, 1, 1);
 }
 
 function ParallelContext(ctx, w, h) {
