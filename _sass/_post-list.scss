@@ -36,6 +36,12 @@
 			display: block;
 			margin-top: 0.3rem;
 		}
+		.title {
+			display: block;
+			overflow-x: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
 		.date {
 			display: block;
 			font-size: 0.9rem;
