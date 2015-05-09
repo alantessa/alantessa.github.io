@@ -63,10 +63,63 @@ var draw = (function () {
 
     
     function showControlPanel(ctx) {
+        // create control panel
         console.log(ctx);
     }
 
+    function fontMetrics(font, text) {
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        ctx.font = font;
+
+        // estimate height
+        var estimatedHeight = Math.ceil(ctx.measureText('M').width) * 2;
+
+        // get width
+        var width = Math.ceil(ctx.measureText(text).width);
+
+        // prepare canvas
+        var scaledWidth = 50;
+        canvas.width = width;
+        canvas.height = estimatedHeight;
+        ctx.font = font;
+        ctx.scale(scaledWidth / width, 1);
+        ctx.fillStyle = '#FFF';
+        var baseline = Math.floor(canvas.height * 0.5);
+        ctx.fillText(text, 0, baseline);
+
+        // calc exact height
+        var pixels = ctx.getImageData(0, 0, scaledWidth, canvas.height).data;
+        var min = -Infinity;
+        var max = +Infinity;
+        for(var y = 0; y < canvas.height; y++) {
+            for(var x = 0; x < scaledWidth; x++) {
+                if(pixels[(y * scaledWidth + x) * 4]) {
+                    min = y;
+                    break;
+                }
+            }
+            if(min != -Infinity) break;
+        }
+        for(var y = canvas.height - 1; y >= 0; y--) {
+            for(var x = 0; x < scaledWidth; x++) {
+                if(pixels[(y * scaledWidth + x) * 4]) {
+                    max = y;
+                    break;
+                }
+            }
+            if(max != Infinity) break;
+        }
+
+        return {
+            width: width,
+            height: max - min,
+            baseline: baseline - min
+        };
+    }
+
     return {
-        showControlPanel: showControlPanel
+        showControlPanel: showControlPanel,
+        fontMetrics: fontMetrics
     };
 })();

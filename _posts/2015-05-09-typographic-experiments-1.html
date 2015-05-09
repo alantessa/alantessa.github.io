@@ -1,0 +1,159 @@
+---
+layout: post
+title:  "typographic experiments 1"
+thumbnail: "typographic-experiments-1.png"
+---
+<canvas class="draw-target"></canvas>
+<script>
+var tileSize;
+var tiles;
+var wide;
+var wideSide;
+var narrowSide;
+
+var defaultPixel = {
+    xNoise: 0,
+    yNoise: 0,
+    color: [0, 0, 0, 0.2],
+    rotate: 0,
+    size: 0.5
+};
+var bg;
+var paused;
+
+function init(ctx, w, h) {
+    Math.seedrandom('alantessa');
+
+    paused = false;
+
+    ctx.canvas.addEventListener('click', function() {
+        paused = !paused;
+    });
+}
+
+function resize(ctx, w, h) {
+    wide = w >= h;
+    wideSide = wide ? w : h;
+    narrowSide = wide ? h: w;
+
+    // draw text on offline canvas
+    var offcanvas = document.createElement('canvas');
+    offcanvas.width = w;
+    offcanvas.height = h;
+    var offctx = offcanvas.getContext('2d');
+    drawText(offctx, w, h);
+
+    // calc tiles
+    var pixels = offctx.getImageData(0, 0, w, h).data;
+    tileSize = Math.max(5, Math.floor(w * 0.005));
+    var nTilesX = Math.ceil(w / tileSize);
+    var nTilesY = Math.ceil(h / tileSize);
+    tiles = [];
+    for(var x = 0; x < nTilesX; x++) {
+        for(var y = 0; y < nTilesY; y++) {
+            if(checkPixel(pixels, x * tileSize, y * tileSize, w)) {
+                var color = Math.floor(Math.random() * 256);
+                tiles[y * nTilesX + x] = {
+                    xNoise: (Math.random() - 0.5) * 0.01,
+                    yNoise: (Math.random() - 0.5) * 0.01,
+                    color: [color, color, color, 1.0],
+                    rotate: Math.random() * Math.PI * 2,
+                    size: Math.random() * 0.9 + 0.1
+                }
+            } else {
+                tiles[y * nTilesX + x] = defaultPixel;
+            }
+        }
+    }
+
+    // draw static background
+    bg = document.createElement('canvas');
+    bg.width = w;
+    bg.height = h;
+    bgctx = bg.getContext('2d');
+    for(var x = 0; x < nTilesX; x++) {
+        for(var y = 0; y < nTilesY; y++) {
+            var tile = tiles[y * nTilesX + x];
+            if(tile === defaultPixel) {
+                polygon(
+                    bgctx,
+                    x * tileSize + tile.xNoise,
+                    y * tileSize + tile.yNoise,
+                    tileSize * tile.size,
+                    3,
+                    'rgba(' + tile.color[0] + ',' + tile.color[1] + ',' + tile.color[2] + ',' + tile.color[3] + ')',
+                    tile.rotate
+                );
+            }
+        }
+    }
+}
+
+function update(ctx, w, h, tick) {
+    if(paused) return;
+
+    ctx.clearRect(0, 0, w, h);
+    ctx.drawImage(bg, 0, 0, w, h);
+    var nTilesX = Math.ceil(w / tileSize);
+    var nTilesY = Math.ceil(h / tileSize);
+    var minAlpha = defaultPixel.color[3];
+    var minSize = defaultPixel.size;
+
+    for(var x = 0; x < nTilesX; x++) {
+        for(var y = 0; y < nTilesY; y++) {
+            var phase = wide ? x : y;
+            var morph = (Math.cos(phase / nTilesX * Math.PI * 1.5 - tick * 0.05) + 1.0) * 0.5;
+
+            var tile = tiles[y * nTilesX + x];
+            if(tile !== defaultPixel) {
+                var alpha = tile.color[3] * (morph * (1 - minAlpha) + minAlpha);
+                polygon(
+                    ctx,
+                    x * tileSize + (tile.xNoise * morph),
+                    y * tileSize + (tile.yNoise * morph),
+                    tileSize * Math.max(minSize, (tile.size * morph)),
+                    3,
+                    'rgba(' + Math.floor(tile.color[0] * morph) + ',' + Math.floor(tile.color[1] * morph) + ',' + Math.floor(tile.color[2] * morph) + ',' + Math.max(minAlpha, tile.color[3] * morph) + ')',
+                    (tile.rotate * morph)
+                );
+            }
+        }
+    }
+}
+
+function drawText(ctx, w, h) {
+    var font = Math.ceil(wideSide * 0.18) + 'px Serif';
+    var text = 'Alan&Tessa';
+    var metrics = draw.fontMetrics(font, text);
+
+    ctx.font = font;
+    ctx.fillStyle = 'red';
+    if(!wide) {
+        ctx.translate(narrowSide, 0);
+        ctx.rotate(0.5 * Math.PI);
+    }
+    ctx.fillText(text, (wideSide - metrics.width) * 0.5, (narrowSide + metrics.baseline) * 0.48);
+}
+
+function checkPixel(pixels, x, y, w) {
+    return pixels[(w * y + x) * 4] !== 0;
+}
+
+function polygon(ctx, x, y, r, sides, color, rotate) {
+    var angle = 2 * Math.PI / sides;
+    var initAngle = rotate || (Math.PI / 2);
+    if (sides % 2 == 0) {
+        initAngle -= (angle / 2);
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(x + r * Math.cos(initAngle), y - r * Math.sin(initAngle));
+    for (var i = 1; i <= sides; i++) {
+        var ox = Math.cos(initAngle + (angle * i));
+        var oy = Math.sin(initAngle + (angle * i));
+        ctx.lineTo(x + r * ox, y - r * oy);
+    }
+    ctx.fillStyle = color;
+    ctx.fill();
+}
+</script>
