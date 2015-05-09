@@ -2,8 +2,6 @@
 layout: post
 title:  "tiles 1"
 thumbnail: "template.png"
-pointcolor: "0, 20, 35"
-bgcolor: "180, 225, 225"
 ---
 <canvas class="draw-target"></canvas>
 <script>
@@ -27,10 +25,11 @@ function resize(ctx, w, h) {
 }
 
 function updateTile(ctx, w, h, ntile) {
-	// var colors = ['rgb(0,47,69)', 'rgb(0,172,182)', 'rgb(159,190,194)', 'rgb(245,103,114)', 'rgb(232,0,84)'];
-	var colors = ['rgb(231,174,155)', 'rgb(200,72,95)', 'rgb(137,203,199)', 'rgb(201,179,165)', 'rgb(248,235,216)'];
 	// var colors = ['rgb()', 'rgb()', 'rgb()', 'rgb()', 'rgb()'];
+	var colors = ['rgb(0,47,69)', 'rgb(0,172,182)', 'rgb(159,190,194)', 'rgb(245,103,114)', 'rgb(232,0,84)'];
+	// var colors = ['rgb(231,174,155)', 'rgb(200,72,95)', 'rgb(137,203,199)', 'rgb(201,179,165)', 'rgb(248,235,216)'];
 	// var colors = ['rgb(224,220,193)', 'rgb(244,219,199)', 'rgb(232,182,159)', 'rgb(227,198,156)'];
+	// var colors = ['rgb()', 'rgb()', 'rgb()', 'rgb()', 'rgb()'];
 	var zones = [];
 	for(var i = 0; i < colors.length * 1.5; i++) {
 		zones.push({x: Math.random() * 1.5 - 0.25, y: Math.random() * 1.5 - 0.25, color: colors[i % colors.length]});

@@ -1,0 +1,28 @@
+---
+layout: post
+title: 
+thumbnail: "template.png"
+---
+<canvas class="draw-target"></canvas>
+<script>
+function init(ctx, w, h) {
+    Math.seedrandom('alantessa');
+}
+
+function update(ctx, w, h, tick) {
+}
+
+function resize(ctx, w, h) {
+	for (var i = 0; i < 100; i++) {
+		var x = Math.random() * w;
+		var x2 = x + (Math.random() - 0.5) * w * 1.2;
+
+		ctx.beginPath();
+		ctx.moveTo(x, 0);
+		ctx.lineTo(x2, h);
+	    ctx.strokeStyle = 'rgba(19,19,36,0.5)';
+	    ctx.stroke();
+	}
+}
+
+</script>

@@ -7,7 +7,7 @@ class: index
 	<li><a href="{{ post.url | prepend: site.baseurl }}" class="card">
 		<img src="/image/thumbnail/{{ post.thumbnail }}" alt="{{ post.title }}">
 		<span class="info">
-			<span class="title">{{ post.title }}</span>
+			<span class="title">{% if post.title %}{{ post.title }}{% else %}untitled{% endif %}</span>
 			<date class="date">{{ post.date | date: "%b %-d, %Y" }}</date>
 		</span>
 	</a></li>
