@@ -10,7 +10,7 @@ var draw = (function () {
     var w, h;
     var fps;
     var tick;
-    
+
     var onInit;
     var onUpdate;
     var onResize;
@@ -44,10 +44,10 @@ var draw = (function () {
         onResize(ctx, w, h);
     }
 
-    
+
     function checkForUpdate() {
         window.requestAnimationFrame(checkForUpdate);
-        
+
         var now = Date.now();
         if (checkForUpdate.updatedAt && now - checkForUpdate.updatedAt < 1000 / fps) {
             return;
@@ -57,14 +57,12 @@ var draw = (function () {
     }
     checkForUpdate.updatedAt = null;
 
-    
+
     window.addEventListener('load', main);
     window.addEventListener('resize', resize);
 
-    
+
     function showControlPanel(ctx) {
-        // create control panel
-        console.log(ctx);
     }
 
     function fontMetrics(font, text) {
