@@ -1,0 +1,193 @@
+---
+layout: post
+title:  "various patterns"
+thumbnail: "template.png"
+---
+<canvas class="draw-target"></canvas>
+<script>
+function init(ctx, w, h) {
+    Math.seedrandom('alantessa');
+}
+
+function resize(ctx, w, h) {
+	var miniCanvasWidth = Math.floor(w * 0.2);
+	var miniCanvasHeight = Math.floor(h * 1);
+
+	ctx.drawImage(drawPattern0(miniCanvasWidth, miniCanvasHeight), 0 + miniCanvasWidth * 0, 0);
+	ctx.drawImage(drawPattern1(miniCanvasWidth, miniCanvasHeight), 0 + miniCanvasWidth * 1, 0);
+	ctx.drawImage(drawPattern2(miniCanvasWidth, miniCanvasHeight), 0 + miniCanvasWidth * 2, 0);
+	ctx.drawImage(drawPattern3(miniCanvasWidth, miniCanvasHeight), 0 + miniCanvasWidth * 3, 0);
+	ctx.drawImage(drawPattern4(miniCanvasWidth, miniCanvasHeight), 0 + miniCanvasWidth * 4, 0);
+}
+
+function drawPattern0(width, height) {
+	var canvas = document.createElement('canvas');
+	canvas.width = width;
+	canvas.height = height;
+	var w = canvas.width;
+	var h = canvas.height;
+	var ctx = canvas.getContext('2d');
+
+	var lineWidth = 2;
+	var margin = lineWidth * 20;
+	ctx.lineWidth = lineWidth;
+	ctx.strokeStyle = '#999';
+
+	for (var i = 0; i < Math.floor(w / lineWidth); i++) {
+		var x = (lineWidth + margin) * i + margin;
+		ctx.beginPath();
+		ctx.moveTo(x, 0);
+		ctx.lineTo(x, h);
+	    ctx.stroke();
+	}
+
+	for (var i = 0; i < Math.floor(h / lineWidth); i++) {
+		var y = (lineWidth + margin) * i + margin;
+		ctx.beginPath();
+		ctx.moveTo(0, y);
+		ctx.lineTo(w, y);
+	    ctx.stroke();
+	}
+
+	return canvas;
+}
+
+function drawPattern1(width, height) {
+	var canvas = document.createElement('canvas');
+	canvas.width = width;
+	canvas.height = height;
+	var w = canvas.width;
+	var h = canvas.height;
+	var ctx = canvas.getContext('2d');
+	
+	var color = ctx.createLinearGradient(0, 0, 0, h);
+	color.addColorStop(0,"#999");
+	color.addColorStop(Math.random(),"#CCC");
+	color.addColorStop(1,"#999");
+
+	var lineWidth = 2;
+	ctx.lineWidth = lineWidth;
+	var margin = lineWidth * 5;
+	ctx.strokeStyle = color;
+
+	for (var i = 0; i < Math.floor(w / lineWidth); i++) {
+		var x = (lineWidth + margin) * i + margin;
+		ctx.beginPath();
+		ctx.setLineDash([10,20]);
+		ctx.moveTo(x, 0);
+		ctx.lineTo(x, h);
+		ctx.closePath();
+	    ctx.stroke();
+	}
+
+	return canvas;
+}
+
+function drawPattern2(width, height) {
+	var canvas = document.createElement('canvas');
+	canvas.width = width;
+	canvas.height = height;
+	var w = canvas.width;
+	var h = canvas.height;
+	var ctx = canvas.getContext('2d');
+
+	var lineWidth = 1;
+	var margin = lineWidth * 20;
+	var color = 'hsla(0, 0%, 50%, 0.9)';
+	ctx.lineWidth = lineWidth;
+	ctx.strokeStyle = color;
+	var length = Math.cos(Math.PI / 4) * w * h;
+
+	for (var i = 0; i < Math.floor(w / lineWidth) * 2; i++) {
+		var x = (lineWidth + margin) * i - (w + h);
+		var y = 0;
+		ctx.beginPath();
+		ctx.moveTo(x, y);
+		ctx.lineTo(x + length, y + length);
+	    ctx.stroke();
+	}
+
+	for (var i = 0; i < Math.floor(w / lineWidth) * 2; i++) {
+		var x = (lineWidth + margin) * i;
+		var y = 0;
+		ctx.beginPath();
+		ctx.moveTo(x, y);
+		ctx.lineTo(x - length, y + length);
+	    ctx.stroke();
+	}
+
+	return canvas;
+}
+
+function drawPattern3(width, height) {
+	var canvas = document.createElement('canvas');
+	canvas.width = width;
+	canvas.height = height;
+	var w = canvas.width;
+	var h = canvas.height;
+	var ctx = canvas.getContext('2d');
+	
+	
+	var lineWidth = 2;
+	ctx.lineWidth = lineWidth;
+	var margin = lineWidth * 5;
+
+	for (var i = 0; i < Math.floor(w / lineWidth); i++) {
+		var x = (lineWidth + margin) * i + margin;
+		var y = Math.floor(Math.random() * h);
+		ctx.beginPath();
+		ctx.moveTo(x, 0);
+		ctx.lineTo(x, y);
+		ctx.closePath();
+		ctx.strokeStyle = '#888';
+	    ctx.stroke();
+	}
+
+	for (var i = 0; i < Math.floor(w / lineWidth); i++) {
+		var x = (lineWidth + margin) * i + margin;
+		var y = Math.floor(Math.random() * h);
+		ctx.beginPath();
+		ctx.moveTo(x, y);
+		ctx.lineTo(x, h);
+		ctx.closePath();
+		ctx.strokeStyle = '#CCC';
+	    ctx.stroke();
+	}
+
+	return canvas;
+}
+
+function drawPattern4(width, height) {
+	var canvas = document.createElement('canvas');
+	canvas.width = width;
+	canvas.height = height;
+	var w = canvas.width;
+	var h = canvas.height;
+	var ctx = canvas.getContext('2d');
+
+	var lineWidth = 5;
+	var length = 20;
+	ctx.strokeStyle = '#BBB';
+	ctx.lineWidth = lineWidth;
+	
+	var offx = Math.cos(Math.PI / 4) * length;
+	var offy = Math.sin(Math.PI / 4) * length;
+	for (var i = 1; i <= Math.floor(h / (lineWidth + length)) + 1; i++) {
+		var x = -offx;
+		var y = (lineWidth + length) * i - lineWidth;
+
+		ctx.beginPath();
+		ctx.moveTo(x, y);
+		for (var j = 0; j <= Math.floor(w / offx) + 1; j++) {
+			var dir = j % 2 == 0 ? -1 : 1;
+			ctx.lineTo(x + offx, y + (offy * dir));
+			ctx.stroke();
+			x = x + offx;
+			y = y + (offy * dir);
+		}	
+	}
+
+
+	return canvas;
+}
+</script>
