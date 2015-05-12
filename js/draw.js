@@ -66,6 +66,7 @@ var draw = (function () {
     }
 
     function fontMetrics(font, text) {
+        // create offline canvas
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');
         ctx.font = font;
@@ -90,6 +91,7 @@ var draw = (function () {
         var pixels = ctx.getImageData(0, 0, scaledWidth, canvas.height).data;
         var min = -Infinity;
         var max = +Infinity;
+        // @TODO: do not use nested loops
         for(var y = 0; y < canvas.height; y++) {
             for(var x = 0; x < scaledWidth; x++) {
                 if(pixels[(y * scaledWidth + x) * 4]) {
@@ -99,6 +101,7 @@ var draw = (function () {
             }
             if(min != -Infinity) break;
         }
+        // @TODO: do not use nested loops
         for(var y = canvas.height - 1; y >= 0; y--) {
             for(var x = 0; x < scaledWidth; x++) {
                 if(pixels[(y * scaledWidth + x) * 4]) {
