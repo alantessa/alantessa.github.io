@@ -3,7 +3,16 @@ layout: post
 title:  "template"
 thumbnail: "template.png"
 ---
-<canvas class="draw-target"></canvas>
+<article class="post">
+	<div class="frame">
+		<canvas class="draw-target"></canvas>
+	</div>
+	<ul class="controls">
+		<li>color1</li>
+		<li>color2</li>
+	</ul>
+</article>
+
 <script>
 function init(ctx, w, h) {
     Math.seedrandom('alantessa');

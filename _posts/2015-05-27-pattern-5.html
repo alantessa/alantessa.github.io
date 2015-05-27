@@ -1,0 +1,39 @@
+---
+layout: post
+title:  "20150527 pattern5"
+thumbnail: "20150527-pattern5.png"
+---
+<article class="post">
+	<div class="frame">
+		<canvas class="draw-target"></canvas>
+	</div>
+</article>
+
+<script>
+function resize(ctx, w, h) {
+	ctx.fillStyle = '#FFF';
+	ctx.fillRect(0, 0, w, h);
+	ctx.fill();
+	
+	var color = [0, 0, 40, 0.7]; //darkGrayTone
+	// var color = [0, 0, 70, 0.7]; //lightGrayTone
+	// var color = [220, 70, 80, 0.7]; //babyBlueTone
+	// var color = [25, 100, 70, 0.7]; //orangeTone
+	
+	var lineWidth = 2;
+	ctx.lineWidth = lineWidth;
+	var margin = lineWidth * 5;
+	var alpha = color[3];
+
+	for (var i = 0; i < Math.floor(w / lineWidth); i++) {
+		var linecolor = 'hsla(' + color[0] + ',' + color[1] + '%,' + color[2] + '%,' + alpha + ')';
+		var y = (lineWidth + margin) * i + margin;
+		ctx.beginPath();
+		ctx.moveTo(0, y);
+		ctx.lineTo(w, y);
+		ctx.strokeStyle = linecolor;
+	    ctx.stroke();
+	    alpha = alpha - 0.01;
+	}
+}
+</script>

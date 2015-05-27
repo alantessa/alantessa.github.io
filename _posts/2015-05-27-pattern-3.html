@@ -1,0 +1,47 @@
+---
+layout: post
+title:  "20150527 pattern3"
+thumbnail: "20150527-pattern3.png"
+---
+<article class="post">
+	<div class="frame">
+		<canvas class="draw-target"></canvas>
+	</div>
+</article>
+
+<script>
+function resize(ctx, w, h) {
+	ctx.fillStyle = '#FFF';
+	ctx.fillRect(0, 0, w, h);
+	ctx.fill();
+	
+	var color = [0, 0, 40, 0.7]; //darkGrayTone
+	// var color = [0, 0, 70, 0.7]; //lightGrayTone
+	// var color = [220, 70, 80, 0.7]; //babyBlueTone
+	// var color = [25, 100, 70, 0.7]; //orangeTone
+	
+	var lineWidth = 1;
+	var margin = lineWidth * 20;
+	ctx.lineWidth = lineWidth;
+	ctx.strokeStyle = 'hsla(' + color[0] + ',' + color[1] + '%,' + color[2] + '%,' + color[3] + ')';
+	var length = Math.cos(Math.PI / 4) * w * h;
+
+	for (var i = 0; i < Math.floor(w / lineWidth) * 2; i++) {
+		var x = (lineWidth + margin) * i - (w + h);
+		var y = 0;
+		ctx.beginPath();
+		ctx.moveTo(x, y);
+		ctx.lineTo(x + length, y + length);
+	    ctx.stroke();
+	}
+
+	for (var i = 0; i < Math.floor(w / lineWidth) * 2; i++) {
+		var x = (lineWidth + margin) * i;
+		var y = 0;
+		ctx.beginPath();
+		ctx.moveTo(x, y);
+		ctx.lineTo(x - length, y + length);
+	    ctx.stroke();
+	}
+}
+</script>

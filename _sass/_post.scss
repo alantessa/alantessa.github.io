@@ -6,24 +6,25 @@
 
 article.post {
 	position: absolute;
-	top: 0;
 	width: 100%;
-	.title {
-		margin: 0;
-		font-weight: 200;
-		text-transform: uppercase;
-	}
 	.frame { //canvas's parent
 		canvas {display: block;}
 		width: 100%;
 		position: absolute;
-		bottom: 0;
 		box-shadow: 1px 1px 2px 1px #EEE;
+	}
+	ul.controls {
+		position: absolute;
+		width: 100%;
+		margin: 0;
+		padding: 0;
+		list-style-type: none;
+		overflow: hidden;
+		li { float: left; }
 	}
 }
 ul.post-nav {
 	position: absolute;
-	bottom: 0;
 	width: 100%;
 
 	margin: 0;
@@ -44,11 +45,12 @@ ul.post-nav {
 		right: $lr-margin;
 	}
 	$margin-outmost: 2.5rem;
-	article.post { bottom: $margin-outmost; }
 	ul.post-nav { height: $margin-outmost; line-height: $margin-outmost; }
-	article.post .title { height: $margin-outmost; line-height: $margin-outmost; font-size: $margin-outmost * 0.4; }
-	article.post .frame { top: $margin-outmost; }
 	ul.post-nav li { font-size: 0.8rem; margin-right: 0.8rem; }
+	article.post { top: $margin-outmost; bottom: 0; }
+	article.post .frame { bottom: $margin-outmost; top: 0; }
+	article.post ul.controls { height: $margin-outmost; line-height: $margin-outmost; bottom: 0; }
+	article.post ul.controls li { font-size: 0.8rem; margin-right: 0.8rem; }
 }
 @media (min-width: $g-breakp-1 + 1px) and (max-width: $g-breakp-2) {
 	$lr-margin: 2rem;
@@ -57,11 +59,12 @@ ul.post-nav {
 		right: $lr-margin;
 	}
 	$margin-outmost: 3rem;
-	article.post { bottom: $margin-outmost; }
 	ul.post-nav { height: $margin-outmost; line-height: $margin-outmost; }
-	article.post .title { height: $margin-outmost; line-height: $margin-outmost; font-size: $margin-outmost * 0.4; }
-	article.post .frame { top: $margin-outmost; }
 	ul.post-nav li { font-size: 0.9rem; margin-right: 0.9rem; }
+	article.post { top: $margin-outmost; bottom: 0; }
+	article.post .frame { bottom: $margin-outmost; top: 0; }
+	article.post ul.controls { height: $margin-outmost; line-height: $margin-outmost; bottom: 0; }
+	article.post ul.controls li { font-size: 0.9rem; margin-right: 0.9rem; }
 }
 @media (min-width: $g-breakp-2 + 1px) {
 	$lr-margin: 4rem;
@@ -70,9 +73,10 @@ ul.post-nav {
 		right: $lr-margin;
 	}
 	$margin-outmost: 4rem;
-	article.post { bottom: $margin-outmost; }
 	ul.post-nav { height: $margin-outmost; line-height: $margin-outmost; }
-	article.post .title { height: $margin-outmost; line-height: $margin-outmost; font-size: $margin-outmost * 0.4; }
-	article.post .frame { top: $margin-outmost; }
 	ul.post-nav li { font-size: 1rem; margin-right: 1rem; }
+	article.post { top: $margin-outmost; bottom: 0; }
+	article.post .frame { bottom: $margin-outmost; top: 0; }
+	article.post ul.controls { height: $margin-outmost; line-height: $margin-outmost; bottom: 0; }
+	article.post ul.controls li { font-size: 1rem; margin-right: 1rem; }
 }
