@@ -8,34 +8,50 @@ thumbnail: "draft.png"
 	<div class="frame" style="display: none;">
 		<canvas class="draw-target"></canvas>
 	</div>
-	<ul style="margin: 0 0 1em; padding:0;">
-		<li class="sides" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 300px;">
+	<ul style="margin: 0; padding:0;">
+		<li class="sides" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
   		<input class="input" type="range" min="5" max="12">
 			<span><span class="result"></span> 각형</span>
 		</li>
-		<li class="leng" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 300px;">
+		<li class="leng" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
   		<input class="input" type="range" min="10" max="200" step="1">
 			<span>크기 <span class="result"></span></span>
 		</li>
-		<li class="alpha" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 300px;">
+		<li style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
+			<button onclick="saveCurrentCfg()">save current cfg</button>
+		</li>
+	</ul>
+	<ul style="margin: 0; padding:0;">
+		<li class="alpha" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
 			<input class="input" type="range" min="0" max="1" step="0.05">
 			<span>alpha <span class="result"></span></span>
 		</li>
-		<li class="hue" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 300px;">
+		<li class="hue" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
 			<input class="input" type="range" min="0" max="360" step="1">
 			<span>hue <span class="result"></span></span>
 		</li>
-		<li class="saturation" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 300px;">
+		<li class="saturation" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
 			<input class="input" type="range" min="0" max="100" step="1">
 			<span>saturation <span class="result"></span></span>
 		</li>
-		<li class="lightness" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 300px;">
+		<li class="lightness" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
 			<input class="input" type="range" min="0" max="100" step="1">
 			<span>lightness <span class="result"></span></span>
 		</li>
-		<li class="stroke" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 300px;">
+	</ul>
+	<ul style="margin: 0; padding:0;">
+		<li class="fill" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
+			<input class="input" type="checkbox"><span style="margin-left: 0.5rem">fill</span>
+		</li>
+		<li class="stroke" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
+			<input class="input" type="checkbox"><span style="margin-left: 0.5rem">stroke</span>
+		</li>
+		<li class="strokeWidth" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
 			<input class="input" type="range" min="1" max="100" step="1">
-			<span>stroke <span class="result"></span></span>
+			<span>stroke-width <span class="result"></span></span>
+		</li>
+		<li class="dashed" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
+			<input class="input" type="checkbox"><span style="margin-left: 0.5rem">dashed</span>
 		</li>
 	</ul>
 	<svg></svg>
@@ -43,7 +59,7 @@ thumbnail: "draft.png"
 
 <script>
 var svgw = 1000;
-var svgh = 800;
+var svgh = 700;
 var cfg = {
 	sides: 6,
 	leng: Math.floor(Math.random() * 150) + 30,
@@ -55,22 +71,36 @@ var cfg = {
 	cy: Math.random(),
 	rx: Math.random(),
 	ry: Math.random(),
-	stroke: Math.floor(Math.random() * 99) + 1
+	fill: false,
+	stroke: true,
+	strokeWidth: Math.floor(Math.random() * 99) + 1,
+	dashed: false,
 };
 
-var inputs = {
+var options = {
 	sides: [document.querySelector('li.sides .input'), document.querySelector('li.sides .result')],
 	leng: [document.querySelector('li.leng .input'), document.querySelector('li.leng .result')],
 	alpha: [document.querySelector('li.alpha .input'), document.querySelector('li.alpha .result')],
 	hue: [document.querySelector('li.hue .input'), document.querySelector('li.hue .result')],
 	saturation: [document.querySelector('li.saturation .input'), document.querySelector('li.saturation .result')],
 	lightness: [document.querySelector('li.lightness .input'), document.querySelector('li.lightness .result')],
-	stroke: [document.querySelector('li.stroke .input'), document.querySelector('li.stroke .result')]
+	fill: [document.querySelector('li.fill .input')],
+	stroke: [document.querySelector('li.stroke .input')],
+	strokeWidth: [document.querySelector('li.strokeWidth .input'), document.querySelector('li.strokeWidth .result')],
+	dashed: [document.querySelector('li.dashed .input')],
 }
 
 function init(ctx, w, h) {
 	redraw();
 	changeAsControlledValue();
+}
+
+var _trigger;
+function triggerRedraw() {
+	if(_trigger) {
+		window.clearTimeout(_trigger);
+	}
+	_trigger = window.setTimeout(redraw, 100);
 }
 
 function redraw() {
@@ -141,11 +171,21 @@ function drawTile(cfg, tilew, tileh) {
 			.attr('cx', Math.floor(cfg.cx * tilew))
 			.attr('cy', Math.floor(cfg.cy * tileh))
 			.attr('rx', Math.ceil(cfg.rx * tilew))
-			.attr('ry', Math.ceil(cfg.ry * tileh))
-			.attr('fill', 'transparent')
+			.attr('ry', Math.ceil(cfg.ry * tileh));
+
+	if (cfg.fill) {
+		pattern.attr('fill', color);
+	} else { pattern.attr('fill', 'transparent') };
+
+	if (cfg.stroke) {
+		pattern
 			.attr('stroke', color)
-			.attr('stroke-dasharray', '5, 5')
-			.attr('stroke-width', Math.floor(cfg.stroke * 0.01 * Math.min(tileh, tilew)));
+			.attr('stroke-width', Math.floor(cfg.strokeWidth * 0.01 * Math.min(tileh, tilew)));
+	};
+	if (cfg.dashed) {
+		pattern.attr('stroke-dasharray', '5, 5');
+	};
+
 }
 
 function layTiles(svg, svgw, svgh, tilew, tileh, sides, angle) {
@@ -179,53 +219,99 @@ function layTiles(svg, svgw, svgh, tilew, tileh, sides, angle) {
 }
 
 function setControlValue() {
-	inputs.sides[0].value = inputs.sides[1].innerHTML = cfg.sides;
-	inputs.leng[0].value = inputs.leng[1].innerHTML = cfg.leng;
-	inputs.alpha[0].value = inputs.alpha[1].innerHTML = cfg.alpha;
-	inputs.hue[0].value = inputs.hue[1].innerHTML = cfg.hue;
-	inputs.saturation[0].value = inputs.saturation[1].innerHTML = cfg.saturation;
-	inputs.lightness[0].value = inputs.lightness[1].innerHTML = cfg.lightness;
-	inputs.stroke[0].value = inputs.stroke[1].innerHTML = cfg.stroke;
-}
-
-var _trigger;
-function triggerRedraw() {
-	if(_trigger) {
-		window.clearTimeout(_trigger);
-	}
-	_trigger = window.setTimeout(redraw, 100);
+	options.sides[0].value = options.sides[1].innerHTML = cfg.sides;
+	options.leng[0].value = options.leng[1].innerHTML = cfg.leng;
+	options.alpha[0].value = options.alpha[1].innerHTML = cfg.alpha;
+	options.hue[0].value = options.hue[1].innerHTML = cfg.hue;
+	options.saturation[0].value = options.saturation[1].innerHTML = cfg.saturation;
+	options.lightness[0].value = options.lightness[1].innerHTML = cfg.lightness;
+	options.strokeWidth[0].value = options.strokeWidth[1].innerHTML = cfg.strokeWidth;
+	options.fill[0].checked = cfg.fill;
+	options.stroke[0].checked = cfg.stroke;
+	options.dashed[0].checked = cfg.dashed;
 }
 
 function changeAsControlledValue() {
 	var svg = d3.select('svg');
-	inputs.sides[0].addEventListener('input', function() {
-		inputs.sides[1].innerHTML = cfg.sides = inputs.sides[0].value;
+	options.sides[0].addEventListener('input', function() {
+		options.sides[1].innerHTML = cfg.sides = options.sides[0].value;
 		triggerRedraw();
 	});
-	inputs.leng[0].addEventListener('input', function() {
-		inputs.leng[1].innerHTML = cfg.leng = inputs.leng[0].value;
+	options.leng[0].addEventListener('input', function() {
+		options.leng[1].innerHTML = cfg.leng = options.leng[0].value;
 		triggerRedraw();
 	});
-	inputs.alpha[0].addEventListener('input', function() {
-		inputs.alpha[1].innerHTML = cfg.alpha = inputs.alpha[0].value;
+	options.alpha[0].addEventListener('input', function() {
+		options.alpha[1].innerHTML = cfg.alpha = options.alpha[0].value;
 		triggerRedraw();
 	});
-	inputs.hue[0].addEventListener('input', function() {
-		inputs.hue[1].innerHTML = cfg.hue = inputs.hue[0].value;
+	options.hue[0].addEventListener('input', function() {
+		options.hue[1].innerHTML = cfg.hue = options.hue[0].value;
 		triggerRedraw();
 	});
-	inputs.saturation[0].addEventListener('input', function() {
-		inputs.saturation[1].innerHTML = cfg.saturation = inputs.saturation[0].value;
+	options.saturation[0].addEventListener('input', function() {
+		options.saturation[1].innerHTML = cfg.saturation = options.saturation[0].value;
 		triggerRedraw();
 	});
-	inputs.lightness[0].addEventListener('input', function() {
-		inputs.lightness[1].innerHTML = cfg.lightness = inputs.lightness[0].value;
+	options.lightness[0].addEventListener('input', function() {
+		options.lightness[1].innerHTML = cfg.lightness = options.lightness[0].value;
 		triggerRedraw();
 	});
-	inputs.stroke[0].addEventListener('input', function() {
-		inputs.stroke[1].innerHTML = cfg.stroke = inputs.stroke[0].value;
+	options.fill[0].addEventListener('change', function() {
+		cfg.fill = options.fill[0].checked;
+		triggerRedraw();
+	});
+	options.stroke[0].addEventListener('change', function() {
+		cfg.stroke = options.stroke[0].checked;
+		if (options.stroke[0].checked) {
+			options.strokeWidth[0].disabled = false;
+			options.dashed[0].disabled = false;
+		} else {
+			options.strokeWidth[0].disabled = true;
+			options.dashed[0].disabled = true;
+		}
+		triggerRedraw();
+	});
+	options.strokeWidth[0].addEventListener('input', function() {
+		options.strokeWidth[1].innerHTML = cfg.strokeWidth = options.strokeWidth[0].value;
+		triggerRedraw();
+	});
+	options.dashed[0].addEventListener('change', function() {
+		cfg.dashed = options.dashed[0].checked;
 		triggerRedraw();
 	});
 }
 
+function saveCurrentCfg() {
+	currentCfg = {
+		sides: options.sides[0].value,
+		leng: options.leng[0].value,
+		alpha: options.alpha[0].value,
+		hue: options.hue[0].value,
+		saturation: options.saturation[0].value,
+		lightness: options.lightness[0].value,
+		cx: cfg.cx,
+		cy: cfg.cy,
+		rx: cfg.rx,
+		ry: cfg.ry,
+		fill: options.fill[0].checked,
+		stroke: options.stroke[0].checked,
+		strokeWidth: options.strokeWidth[0].value,
+		dashed: options.dashed[0].checked,
+	};
+	console.log(currentCfg.sides);
+	console.log(currentCfg.leng);
+	console.log(currentCfg.alpha);
+	console.log(currentCfg.hue);
+	console.log(currentCfg.saturation);
+	console.log(currentCfg.lightness);
+	console.log(currentCfg.cx);
+	console.log(currentCfg.cy);
+	console.log(currentCfg.rx);
+	console.log(currentCfg.ry);
+	console.log(currentCfg.fill);
+	console.log(currentCfg.stroke);
+	console.log(currentCfg.strokeWidth);
+	console.log(currentCfg.dashed);
+}
 </script>
