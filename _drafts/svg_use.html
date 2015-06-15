@@ -1,0 +1,231 @@
+---
+layout: post
+title:  "svg use"
+thumbnail: "draft.png"
+---
+
+<article class="post">
+	<div class="frame" style="display: none;">
+		<canvas class="draw-target"></canvas>
+	</div>
+	<ul style="margin: 0 0 1em; padding:0;">
+		<li class="sides" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 300px;">
+  		<input class="input" type="range" min="5" max="12">
+			<span><span class="result"></span> 각형</span>
+		</li>
+		<li class="leng" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 300px;">
+  		<input class="input" type="range" min="10" max="200" step="1">
+			<span>크기 <span class="result"></span></span>
+		</li>
+		<li class="alpha" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 300px;">
+			<input class="input" type="range" min="0" max="1" step="0.05">
+			<span>alpha <span class="result"></span></span>
+		</li>
+		<li class="hue" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 300px;">
+			<input class="input" type="range" min="0" max="360" step="1">
+			<span>hue <span class="result"></span></span>
+		</li>
+		<li class="saturation" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 300px;">
+			<input class="input" type="range" min="0" max="100" step="1">
+			<span>saturation <span class="result"></span></span>
+		</li>
+		<li class="lightness" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 300px;">
+			<input class="input" type="range" min="0" max="100" step="1">
+			<span>lightness <span class="result"></span></span>
+		</li>
+		<li class="stroke" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 300px;">
+			<input class="input" type="range" min="1" max="100" step="1">
+			<span>stroke <span class="result"></span></span>
+		</li>
+	</ul>
+	<svg></svg>
+</article>
+
+<script>
+var svgw = 1000;
+var svgh = 800;
+var cfg = {
+	sides: 6,
+	leng: Math.floor(Math.random() * 150) + 30,
+	alpha: 1,
+	hue: Math.floor(Math.random() * 360),
+	saturation: Math.floor(Math.random() * 80 + 10),
+	lightness: Math.floor(Math.random() * 80 + 10),
+	cx: Math.random(),
+	cy: Math.random(),
+	rx: Math.random(),
+	ry: Math.random(),
+	stroke: Math.floor(Math.random() * 99) + 1
+};
+
+var inputs = {
+	sides: [document.querySelector('li.sides .input'), document.querySelector('li.sides .result')],
+	leng: [document.querySelector('li.leng .input'), document.querySelector('li.leng .result')],
+	alpha: [document.querySelector('li.alpha .input'), document.querySelector('li.alpha .result')],
+	hue: [document.querySelector('li.hue .input'), document.querySelector('li.hue .result')],
+	saturation: [document.querySelector('li.saturation .input'), document.querySelector('li.saturation .result')],
+	lightness: [document.querySelector('li.lightness .input'), document.querySelector('li.lightness .result')],
+	stroke: [document.querySelector('li.stroke .input'), document.querySelector('li.stroke .result')]
+}
+
+function init(ctx, w, h) {
+	redraw();
+	changeAsControlledValue();
+}
+
+function redraw() {
+	setTemplate();
+	drawPattern();
+	setControlValue();
+}
+
+function setTemplate() {
+	var svg = d3.select('svg');
+	svg.selectAll('*').remove();
+
+	var template = svg.append('g');
+	var tile = template.append('g');
+	var mask = template.append('defs').append('mask');
+	var maskshape = mask.append('polygon');
+
+	svg
+		.attr('width', svgw)
+		.attr('height', svgh)
+		.attr('shape-rendering', 'geometricPrecision')
+		.style('border', '1px solid #AAA');
+	template
+		.style('display', 'none');
+	tile
+		.attr('id', 'tile')
+		.style('mask', 'url(#mask)');
+	mask
+		.attr('id', 'mask')
+		.attr('x', 0)
+		.attr('y', 0);
+	maskshape
+		.attr('id', 'maskshape')
+		.style('fill', '#FFF');
+}
+
+function drawPattern() {
+	var angle = 2 * Math.PI / cfg.sides;
+	var tilew = cfg.leng;
+	var tileh = Math.sin(angle * 2) * cfg.leng;
+
+	// create mask
+	var points = []
+	var pointx = 0;
+	var pointy = 0;
+	for (var i = 0; i < 3; i++) {
+		points.push(pointx + ',' + pointy);
+		pointx = Math.cos(i * angle) * cfg.leng;
+		pointy = Math.sin(i * angle) * cfg.leng;
+	}
+	var mask = d3.select('#mask');
+	mask
+		.attr('width', tilew)
+		.attr('height', tileh);
+	var maskshape = d3.select('#maskshape');
+	maskshape
+		.attr('points', points[0] + ' ' + points[1] + ' ' + points[2]);
+
+	drawTile(cfg, tilew, tileh);
+	layTiles(d3.select('svg'), svgw, svgh, tilew, tileh, cfg.sides, angle);
+}
+
+function drawTile(cfg, tilew, tileh) {
+	var color = 'hsla(' + cfg.hue + ',' + cfg.saturation + '%,' + cfg.lightness + '%,' + cfg.alpha + ')';
+
+	var pattern = d3.select('#tile').append('ellipse')
+		pattern
+			.attr('cx', Math.floor(cfg.cx * tilew))
+			.attr('cy', Math.floor(cfg.cy * tileh))
+			.attr('rx', Math.ceil(cfg.rx * tilew))
+			.attr('ry', Math.ceil(cfg.ry * tileh))
+			.attr('fill', 'transparent')
+			.attr('stroke', color)
+			.attr('stroke-dasharray', '5, 5')
+			.attr('stroke-width', Math.floor(cfg.stroke * 0.01 * Math.min(tileh, tilew)));
+}
+
+function layTiles(svg, svgw, svgh, tilew, tileh, sides, angle) {
+	var data = [];
+
+	for(var i = 0; i < Math.ceil(svgw / tilew); i++) {
+		var even = i % 2 == 0;
+		var xvar = even ? 3 * (i / 2) : 3 * ((i + 1) / 2) - 1.5;
+		var anglenum = angle / Math.PI * 180;
+
+		for(var j = 0; j < Math.ceil(svgh / tileh); j++) {
+			var yvar = even ? j * 2 : (j * 2) + 1;
+
+			for(var k = 0; k < sides; k++) {
+				data.push({
+					x: tilew * xvar,
+					y: tileh * yvar,
+					a: k * anglenum
+				});
+			}
+		}
+	}
+
+	var uses = svg.selectAll('use').data(data);
+	uses.enter()
+		.append('use')
+		.attr('x', function(d) {return d.x;})
+		.attr('y', function(d) {return d.y;})
+		.attr('xlink:href', '#tile')
+		.attr('transform', function(d) {return 'rotate(' + d.a + ',' + d.x + ',' + d.y + ')';});
+}
+
+function setControlValue() {
+	inputs.sides[0].value = inputs.sides[1].innerHTML = cfg.sides;
+	inputs.leng[0].value = inputs.leng[1].innerHTML = cfg.leng;
+	inputs.alpha[0].value = inputs.alpha[1].innerHTML = cfg.alpha;
+	inputs.hue[0].value = inputs.hue[1].innerHTML = cfg.hue;
+	inputs.saturation[0].value = inputs.saturation[1].innerHTML = cfg.saturation;
+	inputs.lightness[0].value = inputs.lightness[1].innerHTML = cfg.lightness;
+	inputs.stroke[0].value = inputs.stroke[1].innerHTML = cfg.stroke;
+}
+
+var _trigger;
+function triggerRedraw() {
+	if(_trigger) {
+		window.clearTimeout(_trigger);
+	}
+	_trigger = window.setTimeout(redraw, 100);
+}
+
+function changeAsControlledValue() {
+	var svg = d3.select('svg');
+	inputs.sides[0].addEventListener('input', function() {
+		inputs.sides[1].innerHTML = cfg.sides = inputs.sides[0].value;
+		triggerRedraw();
+	});
+	inputs.leng[0].addEventListener('input', function() {
+		inputs.leng[1].innerHTML = cfg.leng = inputs.leng[0].value;
+		triggerRedraw();
+	});
+	inputs.alpha[0].addEventListener('input', function() {
+		inputs.alpha[1].innerHTML = cfg.alpha = inputs.alpha[0].value;
+		triggerRedraw();
+	});
+	inputs.hue[0].addEventListener('input', function() {
+		inputs.hue[1].innerHTML = cfg.hue = inputs.hue[0].value;
+		triggerRedraw();
+	});
+	inputs.saturation[0].addEventListener('input', function() {
+		inputs.saturation[1].innerHTML = cfg.saturation = inputs.saturation[0].value;
+		triggerRedraw();
+	});
+	inputs.lightness[0].addEventListener('input', function() {
+		inputs.lightness[1].innerHTML = cfg.lightness = inputs.lightness[0].value;
+		triggerRedraw();
+	});
+	inputs.stroke[0].addEventListener('input', function() {
+		inputs.stroke[1].innerHTML = cfg.stroke = inputs.stroke[0].value;
+		triggerRedraw();
+	});
+}
+
+</script>

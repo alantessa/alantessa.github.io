@@ -25,9 +25,8 @@ var draw = (function () {
         onUpdate = window[canvas.dataset.onUpdate || DEFAULT_ON_UPDATE] || function () {};
         onResize = window[canvas.dataset.onResize || DEFAULT_ON_RESIZE] || function () {};
 
-        resize();
-
         onInit(ctx, w, h);
+        resize();
         checkForUpdate();
     }
 
