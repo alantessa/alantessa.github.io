@@ -18,7 +18,10 @@ thumbnail: "draft.png"
 			<span>크기 <span class="result"></span></span>
 		</li>
 		<li style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-			<button onclick="saveCurrentCfg()">save current cfg</button>
+			<button onclick="redrawPattern()">redraw pattern</button>
+		</li>
+		<li style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
+			<button onclick="drawRandom()">draw random</button>
 		</li>
 	</ul>
 	<ul style="margin: 0; padding:0;">
@@ -41,10 +44,10 @@ thumbnail: "draft.png"
 	</ul>
 	<ul style="margin: 0; padding:0;">
 		<li class="fill" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-			<input class="input" type="checkbox"><span style="margin-left: 0.5rem">fill</span>
+			<input class="input" type="radio" name="style"><span style="margin-left: 0.5rem">fill</span>
 		</li>
 		<li class="stroke" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-			<input class="input" type="checkbox"><span style="margin-left: 0.5rem">stroke</span>
+			<input class="input" type="radio" name="style"><span style="margin-left: 0.5rem">stroke</span>
 		</li>
 		<li class="strokeWidth" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
 			<input class="input" type="range" min="1" max="100" step="1">
@@ -53,6 +56,17 @@ thumbnail: "draft.png"
 		<li class="dashed" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
 			<input class="input" type="checkbox"><span style="margin-left: 0.5rem">dashed</span>
 		</li>
+	</ul>
+	<ul style="margin: 0; padding:0;">
+		<li class="ellipse" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
+			<input class="input" type="radio" name="shape"><span style="margin-left: 0.5rem">ellipse</span>
+		</li>
+		<li class="rect" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
+			<input class="input" type="radio" name="shape"><span style="margin-left: 0.5rem">rect</span>
+		</li>
+		<!-- <li style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
+			<button onclick="getCurDesign()">get current design</button>
+		</li> -->
 	</ul>
 	<svg></svg>
 </article>
@@ -67,17 +81,26 @@ var cfg = {
 	hue: Math.floor(Math.random() * 360),
 	saturation: Math.floor(Math.random() * 80 + 10),
 	lightness: Math.floor(Math.random() * 80 + 10),
-	cx: Math.random(),
-	cy: Math.random(),
-	rx: Math.random(),
-	ry: Math.random(),
 	fill: false,
 	stroke: true,
 	strokeWidth: Math.floor(Math.random() * 99) + 1,
 	dashed: false,
 };
 
-var options = {
+var pcfg = {
+	ellipse: true,
+	cx: Math.random(),
+	cy: Math.random(),
+	rx: Math.random(),
+	ry: Math.random(),
+	rect: false,
+	x: Math.random(),
+	y: Math.random(),
+	width: Math.random(),
+	height: Math.random(),
+}
+
+var controls = {
 	sides: [document.querySelector('li.sides .input'), document.querySelector('li.sides .result')],
 	leng: [document.querySelector('li.leng .input'), document.querySelector('li.leng .result')],
 	alpha: [document.querySelector('li.alpha .input'), document.querySelector('li.alpha .result')],
@@ -88,7 +111,10 @@ var options = {
 	stroke: [document.querySelector('li.stroke .input')],
 	strokeWidth: [document.querySelector('li.strokeWidth .input'), document.querySelector('li.strokeWidth .result')],
 	dashed: [document.querySelector('li.dashed .input')],
+	ellipse: [document.querySelector('li.ellipse .input')],
+	rect: [document.querySelector('li.rect .input')],
 }
+
 
 function init(ctx, w, h) {
 	redraw();
@@ -105,8 +131,38 @@ function triggerRedraw() {
 
 function redraw() {
 	setTemplate();
-	drawPattern();
+	drawTiles();
 	setControlValue();
+}
+
+function drawRandom() {
+	cfg = {
+		sides: 6,
+		leng: Math.floor(Math.random() * 150) + 30,
+		alpha: 1,
+		hue: Math.floor(Math.random() * 360),
+		saturation: Math.floor(Math.random() * 80 + 10),
+		lightness: Math.floor(Math.random() * 80 + 10),
+		fill: false,
+		stroke: true,
+		strokeWidth: Math.floor(Math.random() * 99) + 1,
+		dashed: false,
+	};
+
+	pcfg = {
+		ellipse: true,
+		cx: Math.random(),
+		cy: Math.random(),
+		rx: Math.random(),
+		ry: Math.random(),
+		rect: false,
+		x: Math.random(),
+		y: Math.random(),
+		width: Math.random(),
+		height: Math.random(),
+	}
+
+	redraw();
 }
 
 function setTemplate() {
@@ -137,12 +193,12 @@ function setTemplate() {
 		.style('fill', '#FFF');
 }
 
-function drawPattern() {
+function drawTiles() {
 	var angle = 2 * Math.PI / cfg.sides;
 	var tilew = cfg.leng;
 	var tileh = Math.sin(angle * 2) * cfg.leng;
 
-	// create mask
+	// draw mask
 	var points = []
 	var pointx = 0;
 	var pointy = 0;
@@ -155,37 +211,13 @@ function drawPattern() {
 	mask
 		.attr('width', tilew)
 		.attr('height', tileh);
+
 	var maskshape = d3.select('#maskshape');
 	maskshape
 		.attr('points', points[0] + ' ' + points[1] + ' ' + points[2]);
 
-	drawTile(cfg, tilew, tileh);
 	layTiles(d3.select('svg'), svgw, svgh, tilew, tileh, cfg.sides, angle);
-}
-
-function drawTile(cfg, tilew, tileh) {
-	var color = 'hsla(' + cfg.hue + ',' + cfg.saturation + '%,' + cfg.lightness + '%,' + cfg.alpha + ')';
-
-	var pattern = d3.select('#tile').append('ellipse')
-		pattern
-			.attr('cx', Math.floor(cfg.cx * tilew))
-			.attr('cy', Math.floor(cfg.cy * tileh))
-			.attr('rx', Math.ceil(cfg.rx * tilew))
-			.attr('ry', Math.ceil(cfg.ry * tileh));
-
-	if (cfg.fill) {
-		pattern.attr('fill', color);
-	} else { pattern.attr('fill', 'transparent') };
-
-	if (cfg.stroke) {
-		pattern
-			.attr('stroke', color)
-			.attr('stroke-width', Math.floor(cfg.strokeWidth * 0.01 * Math.min(tileh, tilew)));
-	};
-	if (cfg.dashed) {
-		pattern.attr('stroke-dasharray', '5, 5');
-	};
-
+	drawPattern(tilew, tileh);
 }
 
 function layTiles(svg, svgw, svgh, tilew, tileh, sides, angle) {
@@ -218,101 +250,164 @@ function layTiles(svg, svgw, svgh, tilew, tileh, sides, angle) {
 		.attr('transform', function(d) {return 'rotate(' + d.a + ',' + d.x + ',' + d.y + ')';});
 }
 
+function drawPattern(tilew, tileh) {
+	if (pcfg.ellipse) {
+		var pattern = d3.select('#tile').append('ellipse')
+			pattern
+				.attr('cx', Math.floor(pcfg.cx * tilew))
+				.attr('cy', Math.floor(pcfg.cy * tileh))
+				.attr('rx', Math.ceil(pcfg.rx * tilew))
+				.attr('ry', Math.ceil(pcfg.ry * tileh));
+	}
+
+	if (pcfg.rect) {
+		var pattern = d3.select('#tile').append('rect')
+			pattern
+				.attr('x', Math.floor(pcfg.x * tilew / 2))
+				.attr('y', Math.floor(pcfg.y * tileh / 2))
+				.attr('width', Math.ceil(pcfg.width * tilew))
+				.attr('height', Math.ceil(pcfg.height * tileh));
+	}
+
+	var color = 'hsla(' + cfg.hue + ',' + cfg.saturation + '%,' + cfg.lightness + '%,' + cfg.alpha + ')';
+	if (cfg.fill) {
+		pattern.attr('fill', color);
+	} else { pattern.attr('fill', 'transparent') };
+
+	if (cfg.stroke) {
+		pattern
+			.attr('stroke', color)
+			.attr('stroke-width', Math.floor(cfg.strokeWidth * 0.01 * Math.min(tileh, tilew)));
+	};
+	if (cfg.dashed) {
+		pattern.attr('stroke-dasharray', '5, 5');
+	};
+}
+
+function redrawPattern() {
+	pcfg.cx = Math.random();
+	pcfg.cy = Math.random();
+	pcfg.rx = Math.random();
+	pcfg.ry = Math.random();
+	pcfg.x = Math.random();
+	pcfg.y = Math.random();
+	pcfg.width = Math.random();
+	pcfg.height = Math.random();
+
+	redraw();
+}
+
 function setControlValue() {
-	options.sides[0].value = options.sides[1].innerHTML = cfg.sides;
-	options.leng[0].value = options.leng[1].innerHTML = cfg.leng;
-	options.alpha[0].value = options.alpha[1].innerHTML = cfg.alpha;
-	options.hue[0].value = options.hue[1].innerHTML = cfg.hue;
-	options.saturation[0].value = options.saturation[1].innerHTML = cfg.saturation;
-	options.lightness[0].value = options.lightness[1].innerHTML = cfg.lightness;
-	options.strokeWidth[0].value = options.strokeWidth[1].innerHTML = cfg.strokeWidth;
-	options.fill[0].checked = cfg.fill;
-	options.stroke[0].checked = cfg.stroke;
-	options.dashed[0].checked = cfg.dashed;
+	controls.sides[0].value = controls.sides[1].innerHTML = cfg.sides;
+	controls.leng[0].value = controls.leng[1].innerHTML = cfg.leng;
+	controls.alpha[0].value = controls.alpha[1].innerHTML = cfg.alpha;
+	controls.hue[0].value = controls.hue[1].innerHTML = cfg.hue;
+	controls.saturation[0].value = controls.saturation[1].innerHTML = cfg.saturation;
+	controls.lightness[0].value = controls.lightness[1].innerHTML = cfg.lightness;
+	controls.strokeWidth[0].value = controls.strokeWidth[1].innerHTML = cfg.strokeWidth;
+	controls.fill[0].checked = cfg.fill;
+	controls.stroke[0].checked = cfg.stroke;
+	controls.dashed[0].checked = cfg.dashed;
+	controls.ellipse[0].checked = pcfg.ellipse;
+	controls.rect[0].checked = pcfg.rect;
 }
 
 function changeAsControlledValue() {
 	var svg = d3.select('svg');
-	options.sides[0].addEventListener('input', function() {
-		options.sides[1].innerHTML = cfg.sides = options.sides[0].value;
+	controls.sides[0].addEventListener('input', function() {
+		controls.sides[1].innerHTML = cfg.sides = controls.sides[0].value;
 		triggerRedraw();
 	});
-	options.leng[0].addEventListener('input', function() {
-		options.leng[1].innerHTML = cfg.leng = options.leng[0].value;
+	controls.leng[0].addEventListener('input', function() {
+		controls.leng[1].innerHTML = cfg.leng = controls.leng[0].value;
 		triggerRedraw();
 	});
-	options.alpha[0].addEventListener('input', function() {
-		options.alpha[1].innerHTML = cfg.alpha = options.alpha[0].value;
+	controls.alpha[0].addEventListener('input', function() {
+		controls.alpha[1].innerHTML = cfg.alpha = controls.alpha[0].value;
 		triggerRedraw();
 	});
-	options.hue[0].addEventListener('input', function() {
-		options.hue[1].innerHTML = cfg.hue = options.hue[0].value;
+	controls.hue[0].addEventListener('input', function() {
+		controls.hue[1].innerHTML = cfg.hue = controls.hue[0].value;
 		triggerRedraw();
 	});
-	options.saturation[0].addEventListener('input', function() {
-		options.saturation[1].innerHTML = cfg.saturation = options.saturation[0].value;
+	controls.saturation[0].addEventListener('input', function() {
+		controls.saturation[1].innerHTML = cfg.saturation = controls.saturation[0].value;
 		triggerRedraw();
 	});
-	options.lightness[0].addEventListener('input', function() {
-		options.lightness[1].innerHTML = cfg.lightness = options.lightness[0].value;
+	controls.lightness[0].addEventListener('input', function() {
+		controls.lightness[1].innerHTML = cfg.lightness = controls.lightness[0].value;
 		triggerRedraw();
 	});
-	options.fill[0].addEventListener('change', function() {
-		cfg.fill = options.fill[0].checked;
-		triggerRedraw();
-	});
-	options.stroke[0].addEventListener('change', function() {
-		cfg.stroke = options.stroke[0].checked;
-		if (options.stroke[0].checked) {
-			options.strokeWidth[0].disabled = false;
-			options.dashed[0].disabled = false;
+	controls.fill[0].addEventListener('change', function() {
+		cfg.fill = controls.fill[0].checked;
+		cfg.stroke = controls.stroke[0].checked;
+
+		if (controls.stroke[0].checked) {
+			controls.strokeWidth[0].disabled = false;
+			controls.dashed[0].disabled = false;
 		} else {
-			options.strokeWidth[0].disabled = true;
-			options.dashed[0].disabled = true;
+			controls.strokeWidth[0].disabled = true;
+			controls.dashed[0].disabled = true;
 		}
 		triggerRedraw();
 	});
-	options.strokeWidth[0].addEventListener('input', function() {
-		options.strokeWidth[1].innerHTML = cfg.strokeWidth = options.strokeWidth[0].value;
+	controls.stroke[0].addEventListener('change', function() {
+		cfg.fill = controls.fill[0].checked;
+		cfg.stroke = controls.stroke[0].checked;
+
+		if (controls.stroke[0].checked) {
+			controls.strokeWidth[0].disabled = false;
+			controls.dashed[0].disabled = false;
+		} else {
+			controls.strokeWidth[0].disabled = true;
+			controls.dashed[0].disabled = true;
+		}
 		triggerRedraw();
 	});
-	options.dashed[0].addEventListener('change', function() {
-		cfg.dashed = options.dashed[0].checked;
+	controls.strokeWidth[0].addEventListener('input', function() {
+		controls.strokeWidth[1].innerHTML = cfg.strokeWidth = controls.strokeWidth[0].value;
+		triggerRedraw();
+	});
+	controls.dashed[0].addEventListener('change', function() {
+		cfg.dashed = controls.dashed[0].checked;
+		triggerRedraw();
+	});
+	controls.ellipse[0].addEventListener('change', function() {
+		pcfg.ellipse = controls.ellipse[0].checked;
+		pcfg.rect = controls.rect[0].checked;
+		triggerRedraw();
+	});
+	controls.rect[0].addEventListener('change', function() {
+		pcfg.ellipse = controls.ellipse[0].checked;
+		pcfg.rect = controls.rect[0].checked;
 		triggerRedraw();
 	});
 }
 
-function saveCurrentCfg() {
-	currentCfg = {
-		sides: options.sides[0].value,
-		leng: options.leng[0].value,
-		alpha: options.alpha[0].value,
-		hue: options.hue[0].value,
-		saturation: options.saturation[0].value,
-		lightness: options.lightness[0].value,
-		cx: cfg.cx,
-		cy: cfg.cy,
-		rx: cfg.rx,
-		ry: cfg.ry,
-		fill: options.fill[0].checked,
-		stroke: options.stroke[0].checked,
-		strokeWidth: options.strokeWidth[0].value,
-		dashed: options.dashed[0].checked
-	};
-
-	console.log(currentCfg.sides);
-	console.log(currentCfg.leng);
-	console.log(currentCfg.alpha);
-	console.log(currentCfg.hue);
-	console.log(currentCfg.saturation);
-	console.log(currentCfg.lightness);
-	console.log(currentCfg.cx);
-	console.log(currentCfg.cy);
-	console.log(currentCfg.rx);
-	console.log(currentCfg.ry);
-	console.log(currentCfg.fill);
-	console.log(currentCfg.stroke);
-	console.log(currentCfg.strokeWidth);
-	console.log(currentCfg.dashed);
+function getCurDesign() {
+	var curdesign = {
+		sides: cfg.sides,
+		leng: cfg.leng,
+		alpha: cfg.alpha,
+		hue: cfg.hue,
+		saturation: cfg.saturation,
+		lightness: cfg.lightness,
+		fill: cfg.fill,
+		stroke: cfg.stroke,
+		strokeWidth: cfg.strokeWidth,
+		dashed: cfg.dashed,
+		ellipse: pcfg.ellipse,
+		cx: pcfg.cx,
+		cy: pcfg.cy,
+		rx: pcfg.rx,
+		ry: pcfg.ry,
+		rect: pcfg.rect,
+		x: pcfg.x,
+		y: pcfg.y,
+		width: pcfg.width,
+		height: pcfg.height,
+	}
+	console.log(curdesign);
 }
+
 </script>
