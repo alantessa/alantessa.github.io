@@ -7,7 +7,7 @@ title:  pattern generator 1
 
 <ul class="controls">
 	<li>
-		<button onclick="drawRandom()">draw random</button>
+		<button onclick="drawRandom()">random</button>
 	</li>
 	<li>
 		<button onclick="redrawPattern()">redraw</button>
@@ -112,7 +112,6 @@ function triggerRedraw() {
 function redraw() {
 	setTemplate();
 	drawTiles();
-	colorPattern();
 	setControlValue();
 }
 
@@ -131,8 +130,8 @@ function drawRandom() {
 		saturation: Math.floor(Math.random() * 80 + 10),
 		lightness: Math.floor(Math.random() * 80 + 10),
 		bghue: Math.floor(Math.random() * 360),
-		bgsat: Math.floor(Math.random() * 80 + 10),
-		bglit: Math.floor(Math.random() * 80 + 10),
+		bgsat: Math.floor(Math.random() * 100),
+		bglit: Math.floor(Math.random() * 100),
 	}
 
 	pcfg = {
@@ -283,9 +282,7 @@ function drawPattern(tilew, tileh) {
 	if (cfg.dashed) {
 		pattern.attr('stroke-dasharray', '5, 5');
 	};
-}
 
-function colorPattern() {
 	bgcolor = 'hsla(' + clrcfg.bghue + ',' + clrcfg.bgsat + '%,' + clrcfg.bglit + '%, 1)';
 	d3.select('svg').style('background-color', bgcolor);
 }
@@ -304,12 +301,12 @@ function redrawPattern() {
 }
 
 function recolorPattern() {
-	clrcfg.hue = Math.floor(Math.random() * 360),
+	clrcfg.hue = Math.floor(Math.random() * 360);
 	clrcfg.saturation = Math.floor(Math.random() * 80 + 10);
 	clrcfg.lightness = Math.floor(Math.random() * 80 + 10);
 	clrcfg.bghue = Math.floor(Math.random() * 360);
-	clrcfg.bgsat = Math.floor(Math.random() * 80 + 10);
-	clrcfg.bglit = Math.floor(Math.random() * 80 + 10);
+	clrcfg.bgsat = Math.floor(Math.random() * 100);
+	clrcfg.bglit = Math.floor(Math.random() * 100);
 
 	redraw();
 }
@@ -420,8 +417,8 @@ function savePattern() {
 	img.src = 'data:image/svg+xml;base64,'+ btoa(svgSrc);
 	img.addEventListener('load', function() {
 		var canvas = document.createElement('canvas');
-		canvas.width = img.width * 4;
-		canvas.height = img.height * 4;
+		canvas.width = img.width * 10;
+		canvas.height = img.height * 10;
 		var ctx = canvas.getContext('2d');
 		ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * 10, img.height * 10);
 		var pngData = canvas.toDataURL('image/png');
