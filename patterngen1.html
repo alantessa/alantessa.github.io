@@ -1,100 +1,102 @@
 ---
-layout: post
-title:  "svg use"
-thumbnail: "draft.png"
+layout: default
+title:  pattern generator 1
 ---
 
-<article class="post">
-	<div class="frame" style="display: none;">
-		<canvas class="draw-target"></canvas>
-	</div>
-	<div style="background-color: #FFF; position: absolute; right: 0; width: 600px;">
-		<ul style="margin: 0 0 2em; padding:0;">
-			<li style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-				<button onclick="redrawPattern()">redraw pattern</button>
-			</li>
-			<li style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-				<button onclick="drawRandom()">draw random</button>
-			</li>
-			<li class="sides" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-	  		<input class="input" type="range" min="5" max="12">
-				<span><span class="result"></span> 각형</span>
-			</li>
-			<li class="leng" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-	  		<input class="input" type="range" min="10" max="200" step="1">
-				<span>크기 <span class="result"></span></span>
-			</li>
-		</ul>
-		<ul style="margin: 0 0 2em; padding:0;">
-			<li class="alpha" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-				<input class="input" type="range" min="0" max="1" step="0.05">
-				<span>alpha <span class="result"></span></span>
-			</li>
-			<li class="hue" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-				<input class="input" type="range" min="0" max="360" step="1">
-				<span>hue <span class="result"></span></span>
-			</li>
-			<li class="saturation" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-				<input class="input" type="range" min="0" max="100" step="1">
-				<span>saturation <span class="result"></span></span>
-			</li>
-			<li class="lightness" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-				<input class="input" type="range" min="0" max="100" step="1">
-				<span>lightness <span class="result"></span></span>
-			</li>
-		</ul>
-		<ul style="margin: 0 0 2em; padding:0;">
-			<li class="fill" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-				<input class="input" type="radio" name="style"><span style="margin-left: 0.5rem">fill</span>
-			</li>
-			<li class="stroke" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-				<input class="input" type="radio" name="style"><span style="margin-left: 0.5rem">stroke</span>
-			</li>
-			<li class="strokeWidth" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-				<input class="input" type="range" min="1" max="100" step="1">
-				<span>stroke-width <span class="result"></span></span>
-			</li>
-			<li class="dashed" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-				<input class="input" type="checkbox"><span style="margin-left: 0.5rem">dashed</span>
-			</li>
-		</ul>
-		<ul style="margin: 0 0 2em; padding:0;">
-			<li class="ellipse" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-				<input class="input" type="radio" name="shape"><span style="margin-left: 0.5rem">ellipse</span>
-			</li>
-			<li class="rect" style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-				<input class="input" type="radio" name="shape"><span style="margin-left: 0.5rem">rect</span>
-			</li>
-			<!-- <li style="display: inline-block; margin: 0 1.5rem 1rem 0; width: 240px;">
-				<button onclick="getCurDesign()">get current design</button>
-			</li> -->
-		</ul>
-	</div>
-	<svg></svg>
-</article>
+<div class="svg_wrap"><svg></svg></div>
+
+<ul class="controls">
+	<li>
+		<button onclick="drawRandom()">draw random</button>
+	</li>
+	<li>
+		<button onclick="redrawPattern()">redraw</button>
+		<button onclick="recolorPattern()">recolor</button>
+	</li>
+	<li class="sides">
+		<input class="input" type="range" min="5" max="12">
+		<span><span class="result"></span> 각형</span>
+	</li>
+	<li class="leng">
+		<input class="input" type="range" min="10" max="200" step="1">
+		<span>크기 <span class="result"></span></span>
+	</li>
+	<li class="fill">
+		<input class="input" type="radio" name="style"><span style="margin-left: 0.5rem">fill</span>
+	</li>
+	<li class="stroke">
+		<input class="input" type="radio" name="style"><span style="margin-left: 0.5rem">stroke</span>
+	</li>
+	<li class="strokeWidth">
+		<input class="input" type="range" min="1" max="100" step="1">
+		<span>stroke-width <span class="result"></span></span>
+	</li>
+	<li class="dashed">
+		<input class="input" type="checkbox"><span style="margin-left: 0.5rem">dashed</span>
+	</li>
+	<li class="ellipse">
+		<input class="input" type="radio" name="shape"><span style="margin-left: 0.5rem">ellipse</span>
+	</li>
+	<li class="rect">
+		<input class="input" type="radio" name="shape"><span style="margin-left: 0.5rem">rect</span>
+	</li>
+	<li class="hue">
+		<input class="input" type="range" min="0" max="360" step="1">
+		<span>hue <span class="result"></span></span>
+	</li>
+	<li class="saturation">
+		<input class="input" type="range" min="0" max="100" step="1">
+		<span>saturation <span class="result"></span></span>
+	</li>
+	<li class="lightness">
+		<input class="input" type="range" min="0" max="100" step="1">
+		<span>lightness <span class="result"></span></span>
+	</li>
+	<li class="bghue">
+		<input class="input" type="range" min="0" max="360" step="1">
+		<span>bg hue <span class="result"></span></span>
+	</li>
+	<li class="bgsat">
+		<input class="input" type="range" min="0" max="100" step="1">
+		<span>bg saturation <span class="result"></span></span>
+	</li>
+	<li class="bglit">
+		<input class="input" type="range" min="0" max="100" step="1">
+		<span>bg lightness <span class="result"></span></span>
+	</li>
+	<li>
+		<button onclick="savePattern()">save current pattern</button>
+	</li>
+</ul>
+
+<script type="text/javascript" src="/js/d3.min.js"></script>
+<script type="text/javascript" src="/js/seedrandom.min.js"></script>
 
 <script>
-var svgw = 800;
-var svgh = 800;
+var svgw = 700;
+var svgh = 600;
 var cfg;
+var clrcfg;
 var pcfg;
 
 var controls = {
 	sides: [document.querySelector('li.sides .input'), document.querySelector('li.sides .result')],
 	leng: [document.querySelector('li.leng .input'), document.querySelector('li.leng .result')],
-	alpha: [document.querySelector('li.alpha .input'), document.querySelector('li.alpha .result')],
-	hue: [document.querySelector('li.hue .input'), document.querySelector('li.hue .result')],
-	saturation: [document.querySelector('li.saturation .input'), document.querySelector('li.saturation .result')],
-	lightness: [document.querySelector('li.lightness .input'), document.querySelector('li.lightness .result')],
 	fill: [document.querySelector('li.fill .input')],
 	stroke: [document.querySelector('li.stroke .input')],
 	strokeWidth: [document.querySelector('li.strokeWidth .input'), document.querySelector('li.strokeWidth .result')],
 	dashed: [document.querySelector('li.dashed .input')],
 	ellipse: [document.querySelector('li.ellipse .input')],
 	rect: [document.querySelector('li.rect .input')],
+	hue: [document.querySelector('li.hue .input'), document.querySelector('li.hue .result')],
+	saturation: [document.querySelector('li.saturation .input'), document.querySelector('li.saturation .result')],
+	lightness: [document.querySelector('li.lightness .input'), document.querySelector('li.lightness .result')],
+	bghue: [document.querySelector('li.bghue .input'), document.querySelector('li.bghue .result')],
+	bgsat: [document.querySelector('li.bgsat .input'), document.querySelector('li.bgsat .result')],
+	bglit: [document.querySelector('li.bglit .input'), document.querySelector('li.bglit .result')],
 }
 
-function init(ctx, w, h) {
+function main() {
 	drawRandom();
 	changeAsControlledValue();
 }
@@ -110,6 +112,7 @@ function triggerRedraw() {
 function redraw() {
 	setTemplate();
 	drawTiles();
+	colorPattern();
 	setControlValue();
 }
 
@@ -117,18 +120,23 @@ function drawRandom() {
 	cfg = {
 		sides: 6,
 		leng: Math.floor(Math.random() * 150) + 30,
-		alpha: 1,
-		hue: Math.floor(Math.random() * 360),
-		saturation: Math.floor(Math.random() * 80 + 10),
-		lightness: Math.floor(Math.random() * 80 + 10),
 		fill: false,
-		stroke: true,
+		stroke: false,
 		strokeWidth: Math.floor(Math.random() * 99) + 1,
 		dashed: false,
 	};
 
+	clrcfg = {
+		hue: Math.floor(Math.random() * 360),
+		saturation: Math.floor(Math.random() * 80 + 10),
+		lightness: Math.floor(Math.random() * 80 + 10),
+		bghue: Math.floor(Math.random() * 360),
+		bgsat: Math.floor(Math.random() * 80 + 10),
+		bglit: Math.floor(Math.random() * 80 + 10),
+	}
+
 	pcfg = {
-		ellipse: true,
+		ellipse: false,
 		cx: Math.random(),
 		cy: Math.random(),
 		rx: Math.random(),
@@ -138,6 +146,22 @@ function drawRandom() {
 		y: Math.random(),
 		width: Math.random(),
 		height: Math.random(),
+	}
+
+	if (Math.random() <= 0.5) {
+		cfg.fill = true;
+	} else {
+		cfg.stroke = true;
+	}
+
+	if (Math.random() <= 0.5) {
+		cfg.dashed = true;
+	} 
+
+	if (Math.random() <= 0.5) {
+		pcfg.ellipse = true;
+	} else {
+		pcfg.rect = true;
 	}
 
 	redraw();
@@ -156,7 +180,6 @@ function setTemplate() {
 		.attr('width', svgw)
 		.attr('height', svgh)
 		.attr('shape-rendering', 'geometricPrecision')
-		.style('border', '1px solid #AAA');
 	template
 		.style('display', 'none');
 	tile
@@ -247,7 +270,7 @@ function drawPattern(tilew, tileh) {
 				.attr('height', Math.ceil(pcfg.height * tileh));
 	}
 
-	var color = 'hsla(' + cfg.hue + ',' + cfg.saturation + '%,' + cfg.lightness + '%,' + cfg.alpha + ')';
+	var color = 'hsla(' + clrcfg.hue + ',' + clrcfg.saturation + '%,' + clrcfg.lightness + '%, 1)';
 	if (cfg.fill) {
 		pattern.attr('fill', color);
 	} else { pattern.attr('fill', 'transparent') };
@@ -260,6 +283,11 @@ function drawPattern(tilew, tileh) {
 	if (cfg.dashed) {
 		pattern.attr('stroke-dasharray', '5, 5');
 	};
+}
+
+function colorPattern() {
+	bgcolor = 'hsla(' + clrcfg.bghue + ',' + clrcfg.bgsat + '%,' + clrcfg.bglit + '%, 1)';
+	d3.select('svg').style('background-color', bgcolor);
 }
 
 function redrawPattern() {
@@ -275,19 +303,32 @@ function redrawPattern() {
 	redraw();
 }
 
+function recolorPattern() {
+	clrcfg.hue = Math.floor(Math.random() * 360),
+	clrcfg.saturation = Math.floor(Math.random() * 80 + 10);
+	clrcfg.lightness = Math.floor(Math.random() * 80 + 10);
+	clrcfg.bghue = Math.floor(Math.random() * 360);
+	clrcfg.bgsat = Math.floor(Math.random() * 80 + 10);
+	clrcfg.bglit = Math.floor(Math.random() * 80 + 10);
+
+	redraw();
+}
+
 function setControlValue() {
 	controls.sides[0].value = controls.sides[1].innerHTML = cfg.sides;
 	controls.leng[0].value = controls.leng[1].innerHTML = cfg.leng;
-	controls.alpha[0].value = controls.alpha[1].innerHTML = cfg.alpha;
-	controls.hue[0].value = controls.hue[1].innerHTML = cfg.hue;
-	controls.saturation[0].value = controls.saturation[1].innerHTML = cfg.saturation;
-	controls.lightness[0].value = controls.lightness[1].innerHTML = cfg.lightness;
 	controls.strokeWidth[0].value = controls.strokeWidth[1].innerHTML = cfg.strokeWidth;
 	controls.fill[0].checked = cfg.fill;
 	controls.stroke[0].checked = cfg.stroke;
 	controls.dashed[0].checked = cfg.dashed;
 	controls.ellipse[0].checked = pcfg.ellipse;
 	controls.rect[0].checked = pcfg.rect;
+	controls.hue[0].value = controls.hue[1].innerHTML = clrcfg.hue;
+	controls.saturation[0].value = controls.saturation[1].innerHTML = clrcfg.saturation;
+	controls.lightness[0].value = controls.lightness[1].innerHTML = clrcfg.lightness;
+	controls.bghue[0].value = controls.bghue[1].innerHTML = clrcfg.bghue;
+	controls.bgsat[0].value = controls.bgsat[1].innerHTML = clrcfg.bgsat;
+	controls.bglit[0].value = controls.bglit[1].innerHTML = clrcfg.bglit;
 }
 
 function changeAsControlledValue() {
@@ -298,22 +339,6 @@ function changeAsControlledValue() {
 	});
 	controls.leng[0].addEventListener('input', function() {
 		controls.leng[1].innerHTML = cfg.leng = controls.leng[0].value;
-		triggerRedraw();
-	});
-	controls.alpha[0].addEventListener('input', function() {
-		controls.alpha[1].innerHTML = cfg.alpha = controls.alpha[0].value;
-		triggerRedraw();
-	});
-	controls.hue[0].addEventListener('input', function() {
-		controls.hue[1].innerHTML = cfg.hue = controls.hue[0].value;
-		triggerRedraw();
-	});
-	controls.saturation[0].addEventListener('input', function() {
-		controls.saturation[1].innerHTML = cfg.saturation = controls.saturation[0].value;
-		triggerRedraw();
-	});
-	controls.lightness[0].addEventListener('input', function() {
-		controls.lightness[1].innerHTML = cfg.lightness = controls.lightness[0].value;
 		triggerRedraw();
 	});
 	controls.fill[0].addEventListener('change', function() {
@@ -360,32 +385,54 @@ function changeAsControlledValue() {
 		pcfg.rect = controls.rect[0].checked;
 		triggerRedraw();
 	});
+	controls.hue[0].addEventListener('input', function() {
+		controls.hue[1].innerHTML = clrcfg.hue = controls.hue[0].value;
+		triggerRedraw();
+	});
+	controls.saturation[0].addEventListener('input', function() {
+		controls.saturation[1].innerHTML = clrcfg.saturation = controls.saturation[0].value;
+		triggerRedraw();
+	});
+	controls.lightness[0].addEventListener('input', function() {
+		controls.lightness[1].innerHTML = clrcfg.lightness = controls.lightness[0].value;
+		triggerRedraw();
+	});
+	controls.bghue[0].addEventListener('input', function() {
+		controls.bghue[1].innerHTML = clrcfg.bghue = controls.bghue[0].value;
+		triggerRedraw();
+	});
+	controls.bgsat[0].addEventListener('input', function() {
+		controls.bgsat[1].innerHTML = clrcfg.bgsat = controls.bgsat[0].value;
+		triggerRedraw();
+	});
+	controls.bglit[0].addEventListener('input', function() {
+		controls.bglit[1].innerHTML = clrcfg.bglit = controls.bglit[0].value;
+		triggerRedraw();
+	});
 }
 
-function getCurDesign() {
-	var curdesign = {
-		sides: cfg.sides,
-		leng: cfg.leng,
-		alpha: cfg.alpha,
-		hue: cfg.hue,
-		saturation: cfg.saturation,
-		lightness: cfg.lightness,
-		fill: cfg.fill,
-		stroke: cfg.stroke,
-		strokeWidth: cfg.strokeWidth,
-		dashed: cfg.dashed,
-		ellipse: pcfg.ellipse,
-		cx: pcfg.cx,
-		cy: pcfg.cy,
-		rx: pcfg.rx,
-		ry: pcfg.ry,
-		rect: pcfg.rect,
-		x: pcfg.x,
-		y: pcfg.y,
-		width: pcfg.width,
-		height: pcfg.height,
-	}
-	console.log(curdesign);
+function savePattern() {
+	var img = document.createElement('img');
+	var svgSrc = d3.select('.svg_wrap svg')
+		.attr('version', '1.1')
+		.attr('xmlns', 'http://www.w3.org/2000/svg')
+		.node().parentNode.innerHTML;
+	img.src = 'data:image/svg+xml;base64,'+ btoa(svgSrc);
+	img.addEventListener('load', function() {
+		var canvas = document.createElement('canvas');
+		canvas.width = img.width * 4;
+		canvas.height = img.height * 4;
+		var ctx = canvas.getContext('2d');
+		ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width * 10, img.height * 10);
+		var pngData = canvas.toDataURL('image/png');
+
+		var a = document.createElement("a");
+		a.download = "pattern_" + d3.time.format('%Y%m%d%H%M%S%L')(new Date()) + ".png";
+		a.href = pngData;
+		a.click();
+	});
 }
+
+window.addEventListener('load', main);
 
 </script>
