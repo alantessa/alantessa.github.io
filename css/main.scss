@@ -20,7 +20,7 @@ $g-breakp-1: 600px;
 $g-breakp-2: 1000px;
 
 /* body layout */
-body {
+body.basic {
 	margin: 0 auto;
 	max-width: 75rem;
 	height: 100%;
@@ -86,4 +86,3 @@ footer .copyright {
 
 @import "_post-list";
 @import "_post";
-@import "_patterngen1";
