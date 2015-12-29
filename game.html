@@ -85,13 +85,14 @@
 	var yScale = d3.scale.ordinal().domain(d3.range(map.length / CFG.wTiles))
 
 	function main() {
-		setup()
-		update()
+		resize()
+		window.addEventListener('resize', resize)
 	}
 
-	function setup() {
-		var width = window.innerWidth
-		var height = window.innerWidth
+	function resize() {
+		var width = Math.min(window.innerWidth, window.innerHeight)
+		var height = width
+
 		d3.select('svg')
 			.attr('width', width)
 			.attr('height', height)
@@ -101,6 +102,8 @@
 
 		d3.select('svg .agents')
 			.attr('transform', 'translate(' + (xScale.rangeBand() / 2) + ', ' + (yScale.rangeBand() / 2) + ')')
+
+		update()
 	}
 
 	function update() {
