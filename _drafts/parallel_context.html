@@ -17,9 +17,8 @@ var x2 = 0.75, y2 = 0.75;
 function init(ctx, w, h) {
     Math.seedrandom('alantessa');
     pctx = new ParallelContext(ctx, w, h);
-    
+
     ctx.canvas.addEventListener('mousemove', function(e) {
-        console.log(e);
         pctx.fillRect(e.offsetX, e.offsetY, 2, 2);
     });
 }
@@ -30,7 +29,7 @@ function update(ctx, w, h, tick) {
     x2 += (Math.random() - 0.5) * 0.01;
     y2 += (Math.random() - 0.5) * 0.01;
     var c = Math.random();
-    
+
     pctx.fillStyle = 'rgba(61,185,196,' + c + ')';
     pctx.fillRect(x1 * w, y1 * h, 1, 1);
     pctx.fillRect(x2 * w, y2 * h, 1, 1);
@@ -56,12 +55,11 @@ ParallelContext.prototype.fillRect = function(x, y, w, h) {
 ParallelContext.prototype.strokeRect = function(x, y, w, h) {
     this._call_xywh('strokeRect', x, y, w, h);
 };
-    
+
 ParallelContext.prototype._call_xywh = function(method, x, y, w, h) {
     var cx = this.w * 0.5;
     var cy = this.h * 0.5;
     var r = Math.min(cx, cy);
-    
     var angle = Math.atan2(cy - y, cx - x);
     var d = Math.sqrt(Math.pow(cy - y, 2) + Math.pow(cx - x, 2));
     for(var i = 0; i < Math.PI * 2; i += Math.PI * 0.05) {

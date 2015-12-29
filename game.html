@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style>
+	svg {
+		background-color: #555;
+	}
+	svg .tile {
+		stroke-width: 3px;
+		stroke: transparent;
+	}
+	svg .tile.tile-46 { /* . */
+		fill: #000000;
+	}
+	svg .tile.tile-88 { /* X */
+		fill: #540C50;
+	}
+
+	svg .agent {
+		stroke-width: 2px;
+		stroke: transparent;
+	}
+
+	svg .agent.agent-player {
+		fill: #FFFFFF;
+	}
+	svg .agent.agent-food {
+		fill: #0000FF;
+	}
+
+	svg .selectable {
+		stroke: #34AF1B;
+	}
+	svg .selected {
+		stroke: #FF0000;
+	}
+	</style>
+	<script src="js/d3.min.js"></script>
+	<script>
+	var CFG = {
+		wTiles: 8
+	}
+
+	var mapPattern = [
+		'........',
+		'........',
+		'....X...',
+		'........',
+		'..XXXX..',
+		'..X.....',
+		'..X.....',
+		'..X...X.',
+		'..X.....',
+	].join('')
+
+	var map = []
+	for(var i = 0; i < mapPattern.length; i++) {
+		map.push({
+			type: mapPattern[i],
+			x: i % CFG.wTiles,
+			y: Math.floor(i / CFG.wTiles)
+		})
+	}
+
+	var agents = [
+		{x: 2, y: 3, type: 'player', key: 0},
+
+		{x: 3, y: 5, type: 'food', key: 1},
+		{x: 3, y: 7, type: 'food', key: 2}
+	]
+	var selectedAgent = null
+
+	var xScale = d3.scale.ordinal().domain(d3.range(CFG.wTiles))
+	var yScale = d3.scale.ordinal().domain(d3.range(map.length / CFG.wTiles))
+
+	function main() {
+		setup()
+		update()
+	}
+
+	function setup() {
+		var svg = document.querySelector('svg')
+		xScale.rangeRoundBands([0, svg.offsetWidth], 0.15)
+		yScale.rangeRoundBands([0, svg.offsetHeight], 0.15)
+
+		d3.select('svg .agents')
+			.attr('transform', `translate(${xScale.rangeBand() / 2}, ${yScale.rangeBand() / 2})`)
+	}
+
+	function update() {
+		var tilesSel = d3.select('svg .tiles').selectAll('.tile').data(map)
+		tilesSel.enter()
+			.append('rect')
+			.attr('width', xScale.rangeBand())
+			.attr('height', yScale.rangeBand())
+			.on('click', onTileClick)
+		tilesSel
+			.attr('class', (d, i) => {
+				return `tile tile-${d.type.charCodeAt(0)} ${isSelectableTile(d) ? 'selectable' : ''}`
+			})
+			.transition()
+			.attr('x', (d, i) => xScale(i % CFG.wTiles))
+			.attr('y', (d, i) => yScale(Math.floor(i / CFG.wTiles)))
+		tilesSel.exit()
+			.remove()
+
+		var agentsSel = d3.select('svg .agents').selectAll('.agent').data(agents, d => d.key)
+		agentsSel.enter()
+			.append('circle')
+			.attr('r', xScale.rangeBand() * 0.3)
+			.attr('opacity', '1.0')
+			.on('click', onAgentClick)
+		agentsSel
+			.attr('class', d => {
+				var selectable = isSelectableAgent(d) ? 'selectable' : ''
+				var selected = d === selectedAgent ? 'selected' : ''
+				return `agent agent-${d.type} ${selected} ${selectable}`
+			})
+			.transition()
+			.attr('cx', (d) => xScale(d.x))
+			.attr('cy', (d) => yScale(d.y))
+		agentsSel.exit()
+			.transition()
+			.attr('r', xScale.rangeBand())
+			.attr('opacity', '0.0')
+			.remove()
+	}
+
+	function isVacantTile(tile) {
+		for(var i = 0; i < agents.length; i++) {
+			if(agents[i].x === tile.x && agents[i].y === tile.y) return false
+		}
+		return true
+	}
+
+	function isSelectableTile(tile) {
+		return (
+			// check selection
+			selectedAgent &&
+			// check if the tile is walkable
+			(tile.type === '.') &&
+			// check coordinate
+			(Math.abs(selectedAgent.x - tile.x) + Math.abs(selectedAgent.y - tile.y) === 1) &&
+			// check empty
+			isVacantTile(tile)
+		)
+	}
+
+	function isSelectableAgent(agent) {
+		if(agent.type === 'player') return true
+
+		return (
+			selectedAgent &&
+			(Math.abs(selectedAgent.x - agent.x) + Math.abs(selectedAgent.y - agent.y) === 1)
+		)
+	}
+
+	function onAgentClick(agent) {
+		if(!isSelectableAgent(agent)) return
+
+		if(agent.type === 'food') {
+			// move
+			selectedAgent.x = agent.x
+			selectedAgent.y = agent.y
+			selectedAgent = null
+
+			// eat
+			agents = agents.filter(d => d !== agent)
+		} else {
+			// toggle selection
+			selectedAgent = selectedAgent === agent ? null : agent
+		}
+		update()
+	}
+
+	function onTileClick(tile) {
+		if(!isSelectableTile(tile)) return
+		selectedAgent.x = tile.x
+		selectedAgent.y = tile.y
+		selectedAgent = null
+		update()
+	}
+
+	window.addEventListener('load', main)
+	</script>
+</head>
+<body>
+	<svg width="300" height="300">
+		<g class="tiles"></g>
+		<g class="agents"></g>
+	</svg>
+</body>
+</html>
