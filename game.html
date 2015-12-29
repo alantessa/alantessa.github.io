@@ -90,11 +90,14 @@
 	}
 
 	function setup() {
-		var svg = document.querySelector('svg')
-		svg.width = svg.height = window.innerWidth
+		var width = window.innerWidth
+		var height = window.innerWidth
+		d3.select('svg')
+			.attr('width', width)
+			.attr('height', height)
 
-		xScale.rangeRoundBands([0, svg.offsetWidth], 0.15)
-		yScale.rangeRoundBands([0, svg.offsetHeight], 0.15)
+		xScale.rangeRoundBands([0, width], 0.15)
+		yScale.rangeRoundBands([0, height], 0.15)
 
 		d3.select('svg .agents')
 			.attr('transform', 'translate(' + (xScale.rangeBand() / 2) + ', ' + (yScale.rangeBand() / 2) + ')')
