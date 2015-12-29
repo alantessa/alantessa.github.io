@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<meta charset="utf-8">
 	<title></title>
 	<style>
@@ -86,7 +87,7 @@
 		yScale.rangeRoundBands([0, svg.offsetHeight], 0.15)
 
 		d3.select('svg .agents')
-			.attr('transform', `translate(${xScale.rangeBand() / 2}, ${yScale.rangeBand() / 2})`)
+			.attr('transform', 'translate(' + (xScale.rangeBand() / 2) + ', ' + (yScale.rangeBand() / 2) + ')')
 	}
 
 	function update() {
@@ -97,30 +98,30 @@
 			.attr('height', yScale.rangeBand())
 			.on('click', onTileClick)
 		tilesSel
-			.attr('class', (d, i) => {
-				return `tile tile-${d.type.charCodeAt(0)} ${isSelectableTile(d) ? 'selectable' : ''}`
+			.attr('class', function(d, i) {
+				return 'tile tile-' + (d.type.charCodeAt(0)) + ' ' + (isSelectableTile(d) ? 'selectable' : '')
 			})
 			.transition()
-			.attr('x', (d, i) => xScale(i % CFG.wTiles))
-			.attr('y', (d, i) => yScale(Math.floor(i / CFG.wTiles)))
+			.attr('x', function(d, i) {return xScale(i % CFG.wTiles)})
+			.attr('y', function(d, i) {return yScale(Math.floor(i / CFG.wTiles))})
 		tilesSel.exit()
 			.remove()
 
-		var agentsSel = d3.select('svg .agents').selectAll('.agent').data(agents, d => d.key)
+		var agentsSel = d3.select('svg .agents').selectAll('.agent').data(agents, function(d) {return d.key})
 		agentsSel.enter()
 			.append('circle')
 			.attr('r', xScale.rangeBand() * 0.3)
 			.attr('opacity', '1.0')
 			.on('click', onAgentClick)
 		agentsSel
-			.attr('class', d => {
+			.attr('class', function(d) {
 				var selectable = isSelectableAgent(d) ? 'selectable' : ''
 				var selected = d === selectedAgent ? 'selected' : ''
-				return `agent agent-${d.type} ${selected} ${selectable}`
+				return 'agent agent-' + d.type + ' ' + selected + ' ' + selectable
 			})
 			.transition()
-			.attr('cx', (d) => xScale(d.x))
-			.attr('cy', (d) => yScale(d.y))
+			.attr('cx', function(d) {return xScale(d.x)})
+			.attr('cy', function(d) {return yScale(d.y)})
 		agentsSel.exit()
 			.transition()
 			.attr('r', xScale.rangeBand())
@@ -167,7 +168,7 @@
 			selectedAgent = null
 
 			// eat
-			agents = agents.filter(d => d !== agent)
+			agents = agents.filter(function(d) {return d !== agent})
 		} else {
 			// toggle selection
 			selectedAgent = selectedAgent === agent ? null : agent
