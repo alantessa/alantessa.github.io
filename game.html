@@ -110,8 +110,6 @@
 		var tilesSel = d3.select('svg .tiles').selectAll('.tile').data(map)
 		tilesSel.enter()
 			.append('rect')
-			.attr('width', xScale.rangeBand())
-			.attr('height', yScale.rangeBand())
 			.on(touchable ? 'touchstart' : 'click', onTileClick)
 		tilesSel
 			.attr('class', function(d, i) {
@@ -120,13 +118,14 @@
 			.transition()
 			.attr('x', function(d, i) {return xScale(i % CFG.wTiles)})
 			.attr('y', function(d, i) {return yScale(Math.floor(i / CFG.wTiles))})
+			.attr('width', xScale.rangeBand())
+			.attr('height', yScale.rangeBand())
 		tilesSel.exit()
 			.remove()
 
 		var agentsSel = d3.select('svg .agents').selectAll('.agent').data(agents, function(d) {return d.key})
 		agentsSel.enter()
 			.append('circle')
-			.attr('r', xScale.rangeBand() * 0.3)
 			.attr('opacity', '1.0')
 			.on(touchable ? 'touchstart' : 'click', onAgentClick)
 		agentsSel
@@ -138,6 +137,7 @@
 			.transition()
 			.attr('cx', function(d) {return xScale(d.x)})
 			.attr('cy', function(d) {return yScale(d.y)})
+			.attr('r', xScale.rangeBand() * 0.3)
 		agentsSel.exit()
 			.transition()
 			.attr('r', xScale.rangeBand())
