@@ -40,8 +40,16 @@
 	</style>
 	<script src="js/d3.min.js"></script>
 	<script>
+	var touchable
+	try {
+		document.createEvent("TouchEvent")
+		touchable = true
+	} catch(e) {
+		touchable = false
+	}
+
 	var CFG = {
-		wTiles: 8
+		wTiles: 8,
 	}
 
 	var mapPattern = [
@@ -96,7 +104,7 @@
 			.append('rect')
 			.attr('width', xScale.rangeBand())
 			.attr('height', yScale.rangeBand())
-			.on('mousedown', onTileClick)
+			.on(touchable ? 'touchstart' : 'click', onTileClick)
 		tilesSel
 			.attr('class', function(d, i) {
 				return 'tile tile-' + (d.type.charCodeAt(0)) + ' ' + (isSelectableTile(d) ? 'selectable' : '')
@@ -112,7 +120,7 @@
 			.append('circle')
 			.attr('r', xScale.rangeBand() * 0.3)
 			.attr('opacity', '1.0')
-			.on('mousedown', onAgentClick)
+			.on(touchable ? 'touchstart' : 'click', onAgentClick)
 		agentsSel
 			.attr('class', function(d) {
 				var selectable = isSelectableAgent(d) ? 'selectable' : ''
