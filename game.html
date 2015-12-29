@@ -96,7 +96,7 @@
 			.append('rect')
 			.attr('width', xScale.rangeBand())
 			.attr('height', yScale.rangeBand())
-			.on('click', onTileClick)
+			.on('mousedown', onTileClick)
 		tilesSel
 			.attr('class', function(d, i) {
 				return 'tile tile-' + (d.type.charCodeAt(0)) + ' ' + (isSelectableTile(d) ? 'selectable' : '')
@@ -112,7 +112,7 @@
 			.append('circle')
 			.attr('r', xScale.rangeBand() * 0.3)
 			.attr('opacity', '1.0')
-			.on('click', onAgentClick)
+			.on('mousedown', onAgentClick)
 		agentsSel
 			.attr('class', function(d) {
 				var selectable = isSelectableAgent(d) ? 'selectable' : ''
