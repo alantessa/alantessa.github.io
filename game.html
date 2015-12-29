@@ -173,7 +173,6 @@
 			// move
 			selectedAgent.x = agent.x
 			selectedAgent.y = agent.y
-			selectedAgent = null
 
 			// eat
 			agents = agents.filter(function(d) {return d !== agent})
@@ -188,7 +187,6 @@
 		if(!isSelectableTile(tile)) return
 		selectedAgent.x = tile.x
 		selectedAgent.y = tile.y
-		selectedAgent = null
 		update()
 	}
 
